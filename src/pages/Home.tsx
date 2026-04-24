@@ -21,6 +21,7 @@ import {
   HeartPulse,
   ChevronDown,
   MousePointer2,
+  Newspaper,
 } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -200,40 +201,122 @@ function PanelNews() {
   return (
     <section
       data-panel
-      className="relative w-full min-h-screen flex items-center justify-center px-6 md:px-16 py-24"
-      style={{ background: "hsl(28 30% 92%)" }}
+      className="relative w-full min-h-screen flex items-center justify-center px-6 md:px-16 py-24 overflow-hidden"
+      style={{ background: "hsl(28 35% 90%)" }}
     >
-      <div className="max-w-3xl w-full space-y-16">
-        <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground/70 font-bold">
-          Berita Hari Ini
-        </p>
+      {/* Decorative right-edge brand band */}
+      {/* <div
+        className="absolute top-0 bottom-0 right-0 w-[10px] md:w-[14px]"
+        style={{
+          background:
+            "linear-gradient(to bottom, hsl(15 55% 52%) 0%, hsl(15 60% 45%) 50%, hsl(150 38% 35%) 100%)",
+        }}
+        aria-hidden
+      /> */}
+      {/* Subtle horizontal "newsprint" lines */}
+      <div
+        aria-hidden
+        className="absolute inset-0 opacity-[0.04] pointer-events-none"
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(0deg, hsl(215 30% 15%) 0 1px, transparent 1px 36px)",
+        }}
+      />
+      {/* Soft warm blob top-left */}
+      <div
+        aria-hidden
+        className="absolute -top-24 -left-24 w-[360px] h-[360px] rounded-full opacity-30 blur-3xl pointer-events-none"
+        style={{ background: "hsl(35 70% 70%)" }}
+      />
 
-        <article className="space-y-3 border-l-2 border-primary/40 pl-6 md:pl-8 reveal-up">
-          <h3 className="font-serif text-2xl md:text-4xl leading-tight text-foreground">
-            Iuran BPJS Kesehatan Berpotensi Naik 2026, Pemerintah Targetkan
-            Kelas Menengah
+      <div className="relative max-w-3xl w-full space-y-12">
+        {/* Masthead */}
+        <div className="flex items-center gap-3 md:gap-4 pb-4 border-b-2 border-foreground/15">
+          <div
+            className="px-2.5 py-1 text-[10px] tracking-[0.3em] font-bold uppercase text-white shadow-sm"
+            style={{ background: "hsl(15 60% 50%)" }}
+          >
+            Terkini
+          </div>
+          <Newspaper className="w-4 h-4 text-foreground/55" />
+          <p className="text-xs tracking-[0.3em] uppercase text-foreground/60 font-bold">
+            Berita Hari Ini
+          </p>
+          <span className="ml-auto text-[10px] tracking-widest uppercase text-foreground/45">
+            April 2026
+          </span>
+        </div>
+
+        {/* News article 1 */}
+        <article className="space-y-3 reveal-up">
+          <div className="flex items-center gap-2 text-[10px] tracking-[0.25em] uppercase font-bold">
+            <span
+              className="px-2 py-1 rounded-sm"
+              style={{
+                background: "hsl(15 60% 50% / 0.15)",
+                color: "hsl(15 55% 38%)",
+              }}
+            >
+              Ekonomi
+            </span>
+            <span className="h-px flex-1 bg-foreground/15" />
+            <span className="text-foreground/50">Sumber Berita</span>
+          </div>
+          <h3
+            className="font-serif text-2xl md:text-4xl leading-tight text-foreground border-l-[3px] pl-5"
+            style={{ borderColor: "hsl(15 60% 50%)" }}
+          >
+            Iuran BPJS Kesehatan Berpotensi Naik 2026, Pemerintah Targetkan{" "}
+            <span style={{ color: "hsl(15 55% 42%)" }}>Kelas Menengah</span>
           </h3>
-          <p className="text-xs tracking-widest uppercase text-muted-foreground">
-            Sumber berita
+        </article>
+
+        {/* News article 2 */}
+        <article className="space-y-3 reveal-up">
+          <div className="flex items-center gap-2 text-[10px] tracking-[0.25em] uppercase font-bold">
+            <span
+              className="px-2 py-1 rounded-sm"
+              style={{
+                background: "hsl(150 38% 42% / 0.18)",
+                color: "hsl(150 40% 25%)",
+              }}
+            >
+              Kebijakan
+            </span>
+            <span className="h-px flex-1 bg-foreground/15" />
+            <span className="text-foreground/50">BBC News Indonesia</span>
+          </div>
+          <h3
+            className="font-serif text-2xl md:text-4xl leading-tight text-foreground border-l-[3px] pl-5"
+            style={{ borderColor: "hsl(150 38% 42%)" }}
+          >
+            Warga{" "}
+            <span style={{ color: "hsl(150 40% 28%)" }}>kelas menengah</span>{" "}
+            paling terbebani kenaikan harga BBM dan LPG nonsubsidi
+          </h3>
+          <p className="text-base text-foreground/65 italic pl-5">
+            "Gaji tetap, biaya hidup naik, tapi dianggap{" "}
+            <span className="text-foreground font-semibold not-italic">
+              terlalu kaya
+            </span>{" "}
+            untuk dapat subsidi."
           </p>
         </article>
 
-        <article className="space-y-3 border-l-2 border-secondary/60 pl-6 md:pl-8 reveal-up">
-          <h3 className="font-serif text-2xl md:text-4xl leading-tight text-foreground">
-            Warga kelas menengah paling terbebani kenaikan harga BBM dan LPG
-            nonsubsidi
-          </h3>
-          <p className="text-base text-muted-foreground italic">
-            Gaji tetap, biaya hidup naik, tapi dianggap "terlalu kaya" untuk
-            dapat subsidi.
+        {/* Pull-quote sliver */}
+        {/* <div className="flex items-start gap-3 pt-2">
+          <div
+            className="w-1 flex-shrink-0 rounded-full mt-1"
+            style={{ background: "hsl(35 75% 55%)", height: "44px" }}
+          />
+          <p className="text-sm md:text-base text-foreground/65 leading-relaxed max-w-md">
+            Dua judul. Satu kesimpulan: kelas menengah Indonesia sedang
+            dipojokkan dari banyak sisi.
           </p>
-          <p className="text-xs tracking-widest uppercase text-muted-foreground">
-            BBC News Indonesia
-          </p>
-        </article>
+        </div> */}
       </div>
 
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground/60 text-xs tracking-widest uppercase">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-foreground/55 text-xs tracking-widest uppercase">
         <span>Scroll</span>
         <ChevronDown className="w-4 h-4 animate-bounce" />
       </div>
@@ -445,18 +528,43 @@ function PanelDefinitionZoom() {
               ))}
             </div>
           </div>
+        </div>
+      </div>
 
-          <div
-            className="c-callout pointer-events-none absolute top-[2%] left-1/2 opacity-0 text-center"
-            style={{ transform: "translate(-50%, 24px)", color: C_GREEN }}
+      {/* Callout: positioned BESIDE the pie chart (left side of viewport) so it
+          appears next to the zoomed pie during the scroll animation. Wrapper
+          handles positioning; inner .c-callout handles GSAP opacity + y. */}
+      <div
+        className="absolute z-20 pointer-events-none"
+        style={{
+          left: "6%",
+          top: "50%",
+          transform: "translateY(-50%)",
+          maxWidth: "320px",
+        }}
+      >
+        <div
+          className="c-callout opacity-0"
+          style={{ transform: "translateY(20px)" }}
+        >
+          <p
+            className="text-xs tracking-[0.3em] uppercase font-bold"
+            style={{ color: C_GREEN }}
           >
-            <p className="text-xs tracking-[0.3em] uppercase font-bold">
-              Konsumsi Rumah Tangga
-            </p>
-            <p className="font-serif text-3xl md:text-5xl mt-1 text-foreground">
-              58,8% PDB
-            </p>
-          </div>
+            Konsumsi Rumah Tangga
+          </p>
+          <p className="font-serif text-4xl md:text-6xl mt-2 text-foreground leading-none">
+            58,8%
+          </p>
+          <p
+            className="text-xs tracking-[0.25em] uppercase font-bold mt-1"
+            style={{ color: C_GREEN }}
+          >
+            dari PDB
+          </p>
+          <p className="text-sm text-foreground/70 italic mt-3 max-w-xs">
+            Mesin terbesar pertumbuhan ekonomi Indonesia.
+          </p>
         </div>
       </div>
 
@@ -515,37 +623,56 @@ function PanelDefinitionZoom() {
             </p>
           </div>
 
-          <div className="relative h-[360px] md:h-[440px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={DATA_KONSUMSI_KELAS}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius="36%"
-                  outerRadius="88%"
-                  paddingAngle={1}
-                  dataKey="value"
-                  startAngle={90}
-                  endAngle={-270}
-                  stroke="hsl(140 30% 35%)"
-                  strokeWidth={2}
-                  isAnimationActive={false}
-                >
-                  {DATA_KONSUMSI_KELAS.map((entry, i) => (
-                    <Cell key={i} fill={entry.color} />
-                  ))}
-                </Pie>
-              </PieChart>
-            </ResponsiveContainer>
+          <div className="relative w-full">
+            {/* Pie + side annotation */}
+            <div className="flex items-center justify-end gap-3 md:gap-6">
+              <div className="relative h-[280px] w-[280px] md:h-[360px] md:w-[360px] shrink-0 transform translate-x-16">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={DATA_KONSUMSI_KELAS}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius="36%"
+                      outerRadius="88%"
+                      paddingAngle={1}
+                      dataKey="value"
+                      startAngle={90}
+                      endAngle={-270}
+                      stroke="hsl(140 30% 35%)"
+                      strokeWidth={2}
+                      isAnimationActive={false}
+                    >
+                      {DATA_KONSUMSI_KELAS.map((entry, i) => (
+                        <Cell key={i} fill={entry.color} />
+                      ))}
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
 
-            {/* Cleaner annotation pointing to 81,5% Kelas Menengah slice */}
-            <div
-              className="km-annotation absolute -right-2 md:-right-6 text-right opacity-0 pointer-events-none"
-              style={{ top: "calc(50% - 60px)", transform: "translateX(24px)" }}
-            >
-              <div className="flex items-center gap-3 justify-end">
-                <div className="text-right">
+              {/* Annotation pointing from the pie's right edge */}
+              <div className="km-annotation flex items-center gap-2 md:gap-3 opacity-0 shrink-0 -ml-4">
+                <svg
+                  width="48"
+                  height="40"
+                  viewBox="0 0 48 40"
+                  fill="none"
+                  className="shrink-0"
+                  aria-hidden
+                >
+                  <circle cx="6" cy="20" r="3.5" fill="hsl(38 80% 22%)" />
+                  <line
+                    x1="6"
+                    y1="20"
+                    x2="50"
+                    y2="20"
+                    stroke="hsl(38 80% 22%)"
+                    strokeWidth="1.5"
+                    strokeDasharray="3 3"
+                  />
+                </svg>
+                <div className="text-left">
                   <p
                     className="font-serif text-5xl md:text-6xl leading-none font-bold"
                     style={{ color: "hsl(38 80% 82%)" }}
@@ -555,39 +682,15 @@ function PanelDefinitionZoom() {
                   <p className="text-[11px] uppercase tracking-[0.25em] text-white font-bold mt-2">
                     Kelas Menengah
                   </p>
-                  <p className="text-[11px] text-white/75 italic mt-1">
+                  <p className="text-[11px] text-white/75 italic mt-1 max-w-[150px]">
                     Kontribusi terbesar konsumsi
                   </p>
                 </div>
-                <svg
-                  width="56"
-                  height="56"
-                  viewBox="0 0 56 56"
-                  fill="none"
-                  className="shrink-0"
-                  aria-hidden
-                >
-                  <line
-                    x1="6"
-                    y1="28"
-                    x2="44"
-                    y2="28"
-                    stroke="hsl(38 80% 82%)"
-                    strokeWidth="1.5"
-                    strokeDasharray="3 3"
-                  />
-                  <circle
-                    cx="6"
-                    cy="28"
-                    r="3"
-                    fill="hsl(38 80% 82%)"
-                  />
-                </svg>
               </div>
             </div>
 
-            {/* Bottom legend — 4 segments */}
-            <div className="absolute -bottom-12 left-0 right-0 grid grid-cols-2 gap-x-4 gap-y-2 text-[11px] text-white/90">
+            {/* Legend below — aligned & centered with the chart */}
+            <div className="mt-8 mx-auto max-w-md grid grid-cols-2 gap-x-4 gap-y-2 text-[11px] text-white/90">
               {DATA_KONSUMSI_KELAS.map((d, i) => (
                 <div key={i} className="flex items-center gap-2">
                   <span
@@ -703,7 +806,7 @@ function PanelAlarm() {
       className="relative w-full min-h-screen flex items-center justify-center px-6 md:px-16 py-24"
       style={{ background: "hsl(38 40% 87%)" }}
     >
-      <div className="max-w-5xl w-full space-y-16 text-center">
+      <div className="max-w-5xl w-full space-y-14 text-center">
         <div className="space-y-3 reveal-up">
           <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground font-bold">
             Panel 04 — Alarm Sunyi
@@ -716,22 +819,186 @@ function PanelAlarm() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 reveal-up">
-          <div className="bg-card border border-card-border rounded-2xl p-8 aspect-square flex flex-col items-center justify-center space-y-4">
-            <h3 className="font-bold tracking-widest text-sm">KELAS BAWAH</h3>
-            <div className="h-px w-12 bg-border" />
-            <p className="text-sm text-muted-foreground">Mendapat subsidi & bansos</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 reveal-up items-stretch">
+          {/* KELAS BAWAH — sage / received */}
+          <div
+            className="relative rounded-2xl p-7 md:p-8 aspect-square flex flex-col items-center justify-center space-y-3 overflow-hidden shadow-sm"
+            style={{
+              background: "hsl(150 25% 86%)",
+              borderTop: "4px solid hsl(150 38% 38%)",
+            }}
+          >
+            <div
+              aria-hidden
+              className="absolute -top-6 -right-6 w-28 h-28 rounded-full opacity-25"
+              style={{ background: "hsl(150 40% 50%)" }}
+            />
+            {/* Down-arrow icon (receiving aid) */}
+            <svg
+              width="40"
+              height="40"
+              viewBox="0 0 40 40"
+              fill="none"
+              className="relative"
+              aria-hidden
+            >
+              <path
+                d="M20 6 v18 m-7-7 l7 7 7-7"
+                stroke="hsl(150 40% 28%)"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <line
+                x1="8"
+                y1="32"
+                x2="32"
+                y2="32"
+                stroke="hsl(150 40% 28%)"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+              />
+            </svg>
+            <h3 className="font-bold tracking-widest text-sm text-foreground/85 relative">
+              KELAS BAWAH
+            </h3>
+            <div
+              className="h-px w-12 relative"
+              style={{ background: "hsl(150 38% 38% / 0.5)" }}
+            />
+            <p className="text-sm text-foreground/75 relative max-w-[180px]">
+              Mendapat subsidi & bansos
+            </p>
+            <div
+              className="absolute bottom-3 right-3 px-2 py-0.5 rounded-full text-[9px] tracking-widest font-bold uppercase text-white"
+              style={{ background: "hsl(150 38% 38%)" }}
+            >
+              Dilindungi
+            </div>
           </div>
 
-          <div className="bg-primary/95 text-primary-foreground rounded-2xl p-8 aspect-square flex flex-col items-center justify-center space-y-2 shadow-xl scale-105 z-10">
-            <h3 className="font-bold tracking-widest text-sm">KELAS MENENGAH</h3>
-            <div className="font-serif text-[8rem] leading-none opacity-70">?</div>
+          {/* KELAS MENENGAH — terracotta highlight */}
+          <div
+            className="relative rounded-2xl p-7 md:p-8 aspect-square flex flex-col items-center justify-center space-y-2 overflow-hidden shadow-xl md:scale-105 z-10"
+            style={{
+              background:
+                "linear-gradient(135deg, hsl(15 55% 55%), hsl(15 60% 45%))",
+              borderTop: "4px solid hsl(15 70% 35%)",
+            }}
+          >
+            <div
+              aria-hidden
+              className="absolute inset-0 opacity-25"
+              style={{
+                background:
+                  "radial-gradient(circle at center, white 0%, transparent 70%)",
+              }}
+            />
+            <h3 className="font-bold tracking-widest text-sm text-white relative">
+              KELAS MENENGAH
+            </h3>
+            <div className="font-serif text-[7rem] md:text-[8rem] leading-none text-white/80 relative">
+              ?
+            </div>
+            <div className="absolute bottom-3 right-3 px-2 py-0.5 rounded-full text-[9px] tracking-widest font-bold uppercase bg-white/15 text-white border border-white/20">
+              Tanpa Penopang
+            </div>
           </div>
 
-          <div className="bg-card border border-card-border rounded-2xl p-8 aspect-square flex flex-col items-center justify-center space-y-4">
-            <h3 className="font-bold tracking-widest text-sm">KELAS ATAS</h3>
-            <div className="h-px w-12 bg-border" />
-            <p className="text-sm text-muted-foreground">Memiliki aset & investasi</p>
+          {/* KELAS ATAS — gold / assets */}
+          <div
+            className="relative rounded-2xl p-7 md:p-8 aspect-square flex flex-col items-center justify-center space-y-3 overflow-hidden shadow-sm"
+            style={{
+              background: "hsl(35 50% 86%)",
+              borderTop: "4px solid hsl(35 75% 45%)",
+            }}
+          >
+            <div
+              aria-hidden
+              className="absolute -top-6 -right-6 w-28 h-28 rounded-full opacity-25"
+              style={{ background: "hsl(35 75% 60%)" }}
+            />
+            {/* Stacked-blocks icon (assets) */}
+            <svg
+              width="40"
+              height="40"
+              viewBox="0 0 40 40"
+              fill="none"
+              className="relative"
+              aria-hidden
+            >
+              <rect
+                x="6"
+                y="22"
+                width="28"
+                height="10"
+                rx="1.5"
+                stroke="hsl(35 75% 30%)"
+                strokeWidth="2"
+                fill="none"
+              />
+              <rect
+                x="11"
+                y="13"
+                width="18"
+                height="9"
+                rx="1.5"
+                stroke="hsl(35 75% 30%)"
+                strokeWidth="2"
+                fill="none"
+              />
+              <rect
+                x="15"
+                y="5"
+                width="10"
+                height="8"
+                rx="1.5"
+                stroke="hsl(35 75% 30%)"
+                strokeWidth="2"
+                fill="none"
+              />
+            </svg>
+            <h3 className="font-bold tracking-widest text-sm text-foreground/85 relative">
+              KELAS ATAS
+            </h3>
+            <div
+              className="h-px w-12 relative"
+              style={{ background: "hsl(35 75% 45% / 0.5)" }}
+            />
+            <p className="text-sm text-foreground/75 relative max-w-[180px]">
+              Memiliki aset & investasi
+            </p>
+            <div
+              className="absolute bottom-3 right-3 px-2 py-0.5 rounded-full text-[9px] tracking-widest font-bold uppercase text-white"
+              style={{ background: "hsl(35 75% 45%)" }}
+            >
+              Diuntungkan
+            </div>
+          </div>
+        </div>
+
+        {/* Spectrum indicator below — visual placement of the three classes */}
+        <div className="reveal-up max-w-3xl mx-auto space-y-3">
+          <div
+            className="relative h-2.5 rounded-full overflow-hidden border border-foreground/10"
+            style={{
+              background:
+                "linear-gradient(90deg, hsl(150 28% 70%) 0%, hsl(15 60% 60%) 50%, hsl(35 65% 75%) 100%)",
+            }}
+          >
+            {/* Center pointer = kelas menengah */}
+            <div
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-6 rounded-full border-2"
+              style={{
+                background: "hsl(15 65% 45%)",
+                borderColor: "hsl(15 70% 25%)",
+              }}
+            />
+          </div>
+          <div className="flex justify-between text-[10px] tracking-widest uppercase font-bold">
+            <span style={{ color: "hsl(150 40% 28%)" }}>Bawah · Subsidi</span>
+            <span style={{ color: "hsl(15 60% 38%)" }}>Menengah · ?</span>
+            <span style={{ color: "hsl(35 75% 32%)" }}>Atas · Aset</span>
           </div>
         </div>
 
@@ -784,43 +1051,42 @@ function PanelExpenses() {
           </p>
         </div>
 
-        <div className="relative h-[420px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={DATA_PENGELUARAN}
-                cx="50%"
-                cy="50%"
-                innerRadius={90}
-                outerRadius={150}
-                paddingAngle={2}
-                dataKey="value"
-                isAnimationActive={inView}
-                animationDuration={1400}
-              >
-                {DATA_PENGELUARAN.map((entry, i) => (
-                  <Cell key={i} fill={entry.color} />
-                ))}
-              </Pie>
-              <Tooltip formatter={(v) => `${v}%`} />
-            </PieChart>
-          </ResponsiveContainer>
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
-            <p className="font-serif text-3xl">100%</p>
-            <p className="text-xs text-muted-foreground tracking-widest uppercase">
-              Gaji Bulanan
-            </p>
+        <div className="w-full flex flex-col items-center">
+          <div className="relative h-[360px] w-full max-w-sm">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={DATA_PENGELUARAN}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={92}
+                  outerRadius={150}
+                  paddingAngle={2}
+                  dataKey="value"
+                  isAnimationActive={inView}
+                  animationDuration={1400}
+                >
+                  {DATA_PENGELUARAN.map((entry, i) => (
+                    <Cell key={i} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip formatter={(v) => `${v}%`} />
+              </PieChart>
+            </ResponsiveContainer>
           </div>
-          <div className="absolute -bottom-4 left-0 right-0 grid grid-cols-2 gap-x-4 gap-y-1 text-[11px]">
+          {/* Legend — flex-wrap centered so 5 items align cleanly under the donut */}
+          <div className="mt-4 flex flex-wrap justify-center gap-x-5 gap-y-2 text-[11px] max-w-md">
             {DATA_PENGELUARAN.map((d, i) => (
               <div key={i} className="flex items-center gap-2">
                 <span
                   className="w-2.5 h-2.5 rounded-sm shrink-0"
                   style={{ background: d.color }}
                 />
-                <span className="text-muted-foreground truncate">
+                <span className="text-muted-foreground">
                   {d.name}{" "}
-                  <span className="text-foreground font-bold">{d.value}%</span>
+                  <span className="text-foreground font-bold">
+                    {d.value.toString().replace(".", ",")}%
+                  </span>
                 </span>
               </div>
             ))}
@@ -1209,8 +1475,8 @@ function PanelBappenas() {
                     transitionDuration: "1800ms",
                   }}
                 />
-                {/* 100% marker line */}
-                <div className="absolute right-0 top-0 h-full w-px bg-foreground/30" />
+                {/* 100% marker line — darker, thicker for clear visibility */}
+                <div className="absolute right-0 top-0 h-full w-[3px] bg-foreground/85 rounded-r-full" />
               </div>
               <div className="flex justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
                 <span className="font-bold text-foreground/70">70%</span>
@@ -1242,7 +1508,8 @@ function PanelBappenas() {
                     transitionDuration: "1800ms",
                   }}
                 />
-                <div className="absolute right-0 top-0 h-full w-px bg-foreground/30" />
+                {/* 100% marker line — darker, thicker for clear visibility */}
+                <div className="absolute right-0 top-0 h-full w-[3px] bg-foreground/85 rounded-r-full" />
               </div>
               <div className="flex justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
                 <span className="font-bold text-primary">16,9%</span>
@@ -1259,37 +1526,21 @@ function PanelBappenas() {
 // ============ PANEL 9: HORIZONTAL BAR CHART (AUTO-TRIGGER WHEN PANEL FULL IN VIEW) ============
 
 function PanelBarChart() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [activated, setActivated] = useState(false);
+  // Use the same lightweight in-view hook as other panels so the trigger fires
+  // reliably even when the panel is taller than the viewport.
+  const { ref, inView } = useInView<HTMLElement>(0.2);
 
-  // Auto-trigger only when ~85% of the panel is visible — i.e. panel is "full" on screen
-  useEffect(() => {
-    if (!sectionRef.current) return;
-    const obs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting && e.intersectionRatio >= 0.75) {
-            setActivated(true);
-          }
-        });
-      },
-      { threshold: [0.75, 0.85, 0.95] }
-    );
-    obs.observe(sectionRef.current);
-    return () => obs.disconnect();
-  }, []);
-
-  // Slight delay after activation so animation starts when panel feels settled
+  // Slight delay after entering view so animation starts when panel feels settled
   const [run, setRun] = useState(false);
   useEffect(() => {
-    if (!activated) return;
+    if (!inView) return;
     const t = setTimeout(() => setRun(true), 220);
     return () => clearTimeout(t);
-  }, [activated]);
+  }, [inView]);
 
   return (
     <section
-      ref={sectionRef}
+      ref={ref}
       data-panel
       className="relative w-full min-h-screen flex items-center justify-center px-6 md:px-16 py-24"
       style={{ background: "hsl(40 38% 84%)" }}
@@ -1308,7 +1559,7 @@ function PanelBarChart() {
           </p>
         </div>
 
-        <div className="space-y-7">
+        <div className="space-y-6">
           {KECEMASAN.map((item, i) => (
             <div key={i} className="space-y-2">
               <div className="flex justify-between items-baseline gap-4 text-sm md:text-base">
@@ -1323,17 +1574,17 @@ function PanelBarChart() {
                   {item.val}%
                 </span>
               </div>
-              <div className="h-3 w-full bg-muted/40 rounded-full overflow-hidden">
+              <div className="h-4 w-full bg-muted/50 rounded-full overflow-hidden border border-border/40 shadow-inner">
                 <div
                   className="h-full rounded-full"
                   style={{
                     width: run ? `${item.val}%` : "0%",
                     background:
                       i === 0
-                        ? "hsl(var(--destructive))"
+                        ? "linear-gradient(90deg, hsl(0 55% 45%), hsl(0 60% 55%))"
                         : i === 1
-                        ? "hsl(var(--primary))"
-                        : "hsl(var(--primary) / 0.75)",
+                        ? "linear-gradient(90deg, hsl(15 55% 45%), hsl(15 60% 55%))"
+                        : "linear-gradient(90deg, hsl(15 50% 55%), hsl(35 55% 65%))",
                     transition: `width 1300ms cubic-bezier(0.22, 1, 0.36, 1) ${
                       i * 150
                     }ms`,

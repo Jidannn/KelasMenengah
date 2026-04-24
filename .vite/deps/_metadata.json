@@ -1,0 +1,37 @@
+{
+  "hash": "8142e8d9",
+  "configHash": "aef2b0f5",
+  "lockfileHash": "e3b0c442",
+  "browserHash": "5ec10f67",
+  "optimized": {
+    "react/jsx-dev-runtime": {
+      "src": "../../node_modules/react/jsx-dev-runtime.js",
+      "file": "react_jsx-dev-runtime.js",
+      "fileHash": "0db4dbad",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "3ad00567",
+      "needsInterop": true
+    },
+    "wouter": {
+      "src": "../../node_modules/wouter/src/index.js",
+      "file": "wouter.js",
+      "fileHash": "f7a88919",
+      "needsInterop": false
+    },
+    "@tanstack/react-query": {
+      "src": "../../node_modules/@tanstack/react-query/build/modern/index.js",
+      "file": "@tanstack_react-query.js",
+      "fileHash": "48f0a5c7",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-MRF63CFJ": {
+      "file": "chunk-MRF63CFJ.js"
+    }
+  }
+}
