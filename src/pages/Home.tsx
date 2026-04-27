@@ -15,13 +15,8 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import {
-  Wallet,
-  Home as HomeIcon,
-  GraduationCap,
-  HeartPulse,
-  ChevronDown,
-  MousePointer2,
-  Newspaper,
+  Wallet, Home as HomeIcon, GraduationCap, HeartPulse,
+  ChevronDown, MousePointer2, Newspaper,
 } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -64,16 +59,16 @@ const DATA_PENGELUARAN = [
   { name: "Cicilan / pinjaman", value: 16.4, color: "hsl(var(--destructive))" },
   { name: "Tabungan & investasi", value: 21.8, color: "hsl(var(--secondary))" },
   { name: "Hiburan", value: 11.5, color: "hsl(var(--accent))" },
-  { name: "Pengembangan diri", value: 9.9, color: "hsl(var(--chart-4))" },
+  { name: "Pengembangan diri", value: 9.9, color: "hsl(215 25% 35%)" },
 ];
 
 const KECEMASAN = [
-  { label: "Biaya kesehatan & penyakit di hari tua", val: 72 },
-  { label: "Tidak punya cukup tabungan pensiun", val: 65 },
-  { label: "Menjadi beban anak", val: 58 },
-  { label: "Tidak punya rumah sendiri", val: 51 },
-  { label: "Tidak bisa membiayai pendidikan anak hingga lulus", val: 47 },
-  { label: "Kehilangan pekerjaan / pendapatan", val: 44 },
+  { label: "Penurunan kondisi kesehatan", val: 62.3 },
+  { label: "Kurangnya pendapatan setelah tidak produktif", val: 47.1 },
+  { label: "Peningkatan biaya pengobatan & perawatan", val: 45.1 },
+  { label: "Inflasi dan biaya hidup yang meningkat", val: 44.2 },
+  { label: "Kurangnya tabungan untuk kebutuhan hidup", val: 43.3 },
+  { label: "Penurunan mobilitas", val: 40.6 },
 ];
 
 type CardKey = "keuangan" | "hunian" | "pendidikan" | "kesehatan";
@@ -330,16 +325,24 @@ function PanelWelcome() {
   return (
     <section
       data-panel
-      className="relative w-full min-h-screen flex items-center justify-center px-6 md:px-16"
-      style={{ background: "hsl(30 35% 88%)" }}
+      className="relative w-full h-screen flex items-center justify-center px-6 md:px-16 overflow-hidden bg-slate-900"
     >
-      <div className="max-w-4xl text-center space-y-6 reveal-up">
-        <p className="text-sm tracking-[0.3em] uppercase text-primary/80 font-bold">
+      {/* 1. Background Image: Jakarta Citylight */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center grayscale-[20%] brightness-[0.7]"
+        style={{ backgroundImage: "url('/images/panel1-wallet.png')" }} 
+      />
+      {/* 2. Gradient Overlay untuk keterbacaan */}
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/50" />
+      
+      {/* 3. Konten z-10 */}
+      <div className="relative z-10 max-w-4xl text-center space-y-6 reveal-up">
+        <p className="text-sm tracking-[0.3em] uppercase text-primary font-bold">
           Selamat datang
         </p>
-        <h1 className="font-serif text-4xl md:text-7xl leading-[1.1] text-foreground">
+        <h2 className="font-serif text-4xl md:text-7xl leading-[1.1] text-white">
           Selamat datang ke kehidupan kelas menengah di Indonesia.
-        </h1>
+        </h2>
       </div>
     </section>
   );
@@ -351,15 +354,21 @@ function PanelHook() {
   return (
     <section
       data-panel
-      className="relative w-full min-h-screen flex items-center justify-center px-6 md:px-16 py-24"
-      style={{ background: "hsl(25 32% 90%)" }}
+      className="relative w-full h-screen flex items-center justify-center px-6 md:px-16 py-12 overflow-hidden"
+      style={{
+        background: `
+          radial-gradient(ellipse 70% 50% at 90% 90%, hsl(35 75% 55% / 0.13) 0%, transparent 55%),
+          radial-gradient(ellipse 50% 40% at 10% 15%, hsl(15 55% 50% / 0.09) 0%, transparent 50%),
+          hsl(25 32% 90%)
+        `
+      }}
     >
       <div className="max-w-3xl text-center space-y-10">
         <p className="reveal-up text-xs tracking-[0.3em] uppercase text-muted-foreground font-bold">
           Panel 01
         </p>
 
-        <h2 className="reveal-up font-serif text-4xl md:text-6xl leading-[1.15] text-foreground">
+        <h2 className="reveal-up font-serif text-4xl md:text-4xl leading-[1.15] text-foreground">
           Punya pekerjaan tetap.
           <br />
           Bukan orang miskin.
@@ -367,15 +376,12 @@ function PanelHook() {
           Tapi tiap akhir bulan selalu was-was.
         </h2>
 
-        <div className="reveal-up mx-auto w-full max-w-md aspect-[4/3] rounded-xl border-2 border-dashed border-border/70 bg-card/40 flex items-center justify-center">
-          <div className="text-center px-6 text-muted-foreground/60">
-            <p className="text-xs uppercase tracking-widest font-bold">
-              Tempat untuk gambar
-            </p>
-            <p className="text-[10px] mt-1 tracking-wider">
-              Gambar dapat ditambahkan di sini
-            </p>
-          </div>
+        <div className="reveal-up mx-auto w-full max-w-md aspect-[4/3] rounded-xl overflow-hidden shadow-md">
+          <img
+            src="/images/panel1-foto.webp"
+            alt="Kehidupan kelas menengah"
+            className="w-full h-full object-cover"
+          />
         </div>
 
         <p className="reveal-up text-lg md:text-xl text-muted-foreground">
@@ -501,7 +507,7 @@ function PanelDefinitionZoom() {
           </div>
 
           {/* Proportional legend bar — width of each segment matches percentage */}
-          <div className="pdb-legend w-full max-w-md space-y-3 px-2">
+          <div className="pdb-legend w-full max-w-xl space-y-3 px-2">
             <div className="flex w-full h-3 rounded-full overflow-hidden border border-border/50 shadow-sm">
               {DATA_PDB.map((d) => (
                 <div
@@ -518,7 +524,7 @@ function PanelDefinitionZoom() {
                     className="w-2.5 h-2.5 rounded-sm shrink-0"
                     style={{ background: d.color }}
                   />
-                  <span className="text-muted-foreground truncate">
+                  <span className="text-muted-foreground whitespace-nowrap">
                     {d.name}{" "}
                     <span className="font-bold text-foreground">
                       {d.value.toString().replace(".", ",")}%
@@ -697,9 +703,9 @@ function PanelDefinitionZoom() {
                     className="w-3 h-3 rounded-sm shrink-0"
                     style={{ background: d.color }}
                   />
-                  <span className="truncate">
+                  <span className="text-muted-foreground leading-tight">
                     {d.name}{" "}
-                    <span className="font-bold text-white">
+                    <span className="font-bold text-foreground">
                       {d.value.toString().replace(".", ",")}%
                     </span>
                   </span>
@@ -1248,14 +1254,13 @@ function PanelFourCards({
                       >
                         {meta.label}
                       </h3>
-                      {visited.has(key) ? (
+                      {/* {visited.has(key) ? (
                         <span
                           className="absolute top-2 right-2 text-[10px] uppercase tracking-widest font-bold"
                           style={{ color: meta.accent }}
                         >
-                          dibuka
                         </span>
-                      ) : null}
+                      ) : null} */}
                     </div>
                     {/* BACK */}
                     <div
@@ -1326,7 +1331,7 @@ function PanelFourCards({
         <div className="flex items-center justify-center gap-3 text-sm text-muted-foreground pt-4">
           <ChevronDown className="w-4 h-4 text-primary animate-bounce" />
           <span className="text-primary font-bold">
-            Hover setiap kartu — atau lanjut scroll untuk melihat bagaimana mereka bertahan
+            Hover setiap kartu atau lanjut scroll untuk melihat konten selanjutnya
           </span>
         </div>
       </div>
@@ -1719,11 +1724,30 @@ export default function Home() {
 
   return (
     <div ref={containerRef} className="relative w-full bg-background text-foreground">
-      <div className="fixed top-0 left-0 w-full h-1 bg-border/40 z-50">
-        <div
-          className="h-full bg-primary transition-[width] duration-150"
-          style={{ width: `${progress * 100}%` }}
-        />
+      {/* Scroll progress bar */}
+      <div className="fixed top-0 left-0 w-full z-50 pointer-events-none">
+        {/* Track */}
+        <div className="w-full h-[5px] bg-black/10">
+          {/* Fill */}
+          <div
+            className="h-full transition-[width] duration-150 ease-out"
+            style={{
+              width: `${Math.round(progress * 100)}%`,
+              background: "linear-gradient(90deg, hsl(120, 30%, 45%), hsl(130, 30%, 49%), hsl(140 30% 48%))",
+            }}
+          />
+        </div>
+        {/* Label pill */}
+        {progress > 0.01 && (
+          <div className="absolute top-[7px] left-2">
+            <span
+              className="text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full text-white"
+              style={{ background: "hsl(140, 30%, 48%)" }}
+            >
+              {Math.round(progress * 100)}%
+            </span>
+          </div>
+        )}
       </div>
 
       <PanelNews />
