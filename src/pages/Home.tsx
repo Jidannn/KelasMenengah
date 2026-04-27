@@ -731,23 +731,26 @@ function PanelShrinking() {
       className="relative w-full min-h-screen flex items-center justify-center px-6 md:px-16 py-24"
       style={{ background: "hsl(20 32% 89%)" }}
     >
-      <div className="max-w-5xl w-full space-y-10">
-        <div className="space-y-3 text-center">
+      {/* 1. Ukuran container diperkecil (max-w-4xl) & jarak antar elemen dirapatkan (space-y-6) */}
+      <div className="max-w-4xl w-full space-y-6">
+        <div className="space-y-2 text-center">
           <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground font-bold">
             Panel 03 — Penyusutan
           </p>
-          <h2 className="font-serif text-3xl md:text-5xl leading-tight">
+          {/* 2. Ukuran font judul diperkecil */}
+          <h2 className="font-serif text-2xl md:text-4xl leading-tight text-foreground">
             Tapi… jumlah tulang punggung terus menyusut.
           </h2>
         </div>
 
+        {/* 3. Tinggi chart dipangkas (h-[320px]) */}
         <div
-          className={`h-[420px] w-full bg-card/60 p-6 rounded-2xl border border-card-border transition-opacity duration-1000 ${
+          className={`h-[320px] w-full bg-card/60 p-4 md:p-6 rounded-2xl border border-card-border transition-opacity duration-1000 ${
             inView ? "opacity-100" : "opacity-0"
           }`}
         >
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={DATA_TREND} margin={{ top: 30, right: 30, left: 0, bottom: 10 }}>
+            <LineChart data={DATA_TREND} margin={{ top: 20, right: 20, left: -20, bottom: 0 }}>
               <CartesianGrid
                 strokeDasharray="3 6"
                 stroke="hsl(var(--border))"
@@ -758,9 +761,11 @@ function PanelShrinking() {
                 stroke="hsl(var(--muted-foreground))"
                 fontSize={11}
                 tickLine={false}
+                tickMargin={10}
               />
               <YAxis
-                domain={[15, 25]}
+                domain={[15, 25]} // Memaksa grafik mulai dari 0 hingga 25
+                ticks={[15, 20, 25]} // Angka sumbu Y statis dan konsisten kelipatan 5
                 stroke="hsl(var(--muted-foreground))"
                 fontSize={11}
                 tickFormatter={(val) => `${val}%`}
@@ -790,14 +795,18 @@ function PanelShrinking() {
           </ResponsiveContainer>
         </div>
 
-        <div className="text-center space-y-2">
-          <p className="text-lg md:text-xl font-bold text-destructive">
-            2019: 57,3 juta orang &nbsp;→&nbsp; 2024: 47,2 juta orang
-          </p>
-          <p className="font-serif text-2xl md:text-3xl">
-            10 juta orang turun kelas dalam 5 tahun.
-          </p>
+        {/* 4. Highlight Kesimpulan Data */}
+        <div className="flex justify-center pt-2">
+          <div className="bg-destructive/10 border border-destructive/20 px-6 py-4 rounded-xl text-center space-y-1 shadow-sm">
+            <p className="text-sm md:text-base font-bold text-destructive">
+              2019: 57,3 juta orang &nbsp;→&nbsp; 2024: 47,2 juta orang
+            </p>
+            <p className="font-serif text-xl md:text-2xl text-foreground">
+              <span className="text-destructive font-semibold">10 juta orang</span> turun kelas dalam 5 tahun.
+            </p>
+          </div>
         </div>
+        
       </div>
     </section>
   );
@@ -809,209 +818,119 @@ function PanelAlarm() {
   return (
     <section
       data-panel
-      className="relative w-full min-h-screen flex items-center justify-center px-6 md:px-16 py-24"
+      // py-24 dikurangi jadi py-16 agar tidak terlalu banyak ruang kosong atas-bawah
+      className="relative w-full min-h-screen flex items-center justify-center px-6 md:px-16 py-16"
       style={{ background: "hsl(38 40% 87%)" }}
     >
-      <div className="max-w-5xl w-full space-y-14 text-center">
-        <div className="space-y-3 reveal-up">
+      {/* space-y-14 dikurangi jadi space-y-8 */}
+      <div className="max-w-5xl w-full space-y-8 text-center">
+        <div className="space-y-2 reveal-up">
           <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground font-bold">
             Panel 04 — Alarm Sunyi
           </p>
-          <h2 className="font-serif text-3xl md:text-5xl leading-tight max-w-3xl mx-auto">
+          {/* Ukuran font judul diperkecil dari text-5xl jadi text-4xl */}
+          <h2 className="font-serif text-2xl md:text-4xl leading-tight max-w-3xl mx-auto text-foreground">
             Kelas menengah menghadapi sebuah "alarm sunyi" kerentanan.
           </h2>
-          <p className="text-xs tracking-widest text-muted-foreground uppercase font-bold">
+          <p className="text-[10px] tracking-widest text-muted-foreground uppercase font-bold">
             KIMCI 2026
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 reveal-up items-stretch">
-          {/* KELAS BAWAH — sage / received */}
-          <div
-            className="relative rounded-2xl p-7 md:p-8 aspect-square flex flex-col items-center justify-center space-y-3 overflow-hidden shadow-sm"
-            style={{
-              background: "hsl(150 25% 86%)",
-              borderTop: "4px solid hsl(150 38% 38%)",
-            }}
-          >
+        {/* max-w-4xl ditambahkan agar grid tidak melebar berlebihan ke samping */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 reveal-up items-stretch max-w-4xl mx-auto">
+          
+          {/* ================= KELAS BAWAH (SUBSIDI) ================= */}
+          <div className="relative rounded-xl h-[240px] md:h-[280px] p-5 flex flex-col items-center justify-center overflow-hidden shadow-sm border border-black/10 group">
+            {/* Background Image */}
             <div
-              aria-hidden
-              className="absolute -top-6 -right-6 w-28 h-28 rounded-full opacity-25"
-              style={{ background: "hsl(150 40% 50%)" }}
+              className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+              /* UBAH URL INI DENGAN FOTO BANSOS/SUBSIDI DI FOLDER LOKALMU */
+              style={{ backgroundImage: "url('/images/bahlil.webp')" }} 
             />
-            {/* Down-arrow icon (receiving aid) */}
-            <svg
-              width="40"
-              height="40"
-              viewBox="0 0 40 40"
-              fill="none"
-              className="relative"
-              aria-hidden
-            >
-              <path
-                d="M20 6 v18 m-7-7 l7 7 7-7"
-                stroke="hsl(150 40% 28%)"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <line
-                x1="8"
-                y1="32"
-                x2="32"
-                y2="32"
-                stroke="hsl(150 40% 28%)"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-              />
-            </svg>
-            <h3 className="font-bold tracking-widest text-sm text-foreground/85 relative">
-              KELAS BAWAH
-            </h3>
-            <div
-              className="h-px w-12 relative"
-              style={{ background: "hsl(150 38% 38% / 0.5)" }}
-            />
-            <p className="text-sm text-foreground/75 relative max-w-[180px]">
-              Mendapat subsidi & bansos
-            </p>
-            <div
-              className="absolute bottom-3 right-3 px-2 py-0.5 rounded-full text-[9px] tracking-widest font-bold uppercase text-white"
-              style={{ background: "hsl(150 38% 38%)" }}
-            >
+            {/* Overlay Gelap Kehijauan */}
+            <div className="absolute inset-0 bg-emerald-950/65" />
+
+            <div className="relative z-10 flex flex-col items-center">
+              <svg width="32" height="32" viewBox="0 0 40 40" fill="none" className="mb-2 opacity-80">
+                <path d="M20 6 v18 m-7-7 l7 7 7-7" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                <line x1="8" y1="32" x2="32" y2="32" stroke="white" strokeWidth="2.2" strokeLinecap="round"/>
+              </svg>
+              <h3 className="font-bold tracking-widest text-xs text-white">
+                KELAS BAWAH
+              </h3>
+              <div className="h-px w-10 my-2 bg-white/30" />
+              <p className="text-xs text-white/80 max-w-[160px]">
+                Mendapat subsidi & bansos
+              </p>
+            </div>
+            <div className="absolute bottom-3 right-3 px-2 py-0.5 rounded-full text-[8px] tracking-widest font-bold uppercase text-white bg-emerald-600/80 backdrop-blur-sm">
               Dilindungi
             </div>
           </div>
 
-          {/* KELAS MENENGAH — terracotta highlight */}
-          <div
-            className="relative rounded-2xl p-7 md:p-8 aspect-square flex flex-col items-center justify-center space-y-2 overflow-hidden shadow-xl md:scale-105 z-10"
-            style={{
-              background:
-                "linear-gradient(135deg, hsl(15 55% 55%), hsl(15 60% 45%))",
-              borderTop: "4px solid hsl(15 70% 35%)",
-            }}
-          >
+          {/* ================= KELAS MENENGAH (TANDA TANYA) ================= */}
+          <div className="relative rounded-xl h-[260px] md:h-[300px] p-5 flex flex-col items-center justify-center overflow-hidden shadow-xl md:-mt-2 md:mb-2 z-10 border border-white/10 group">
+            {/* Background Image */}
             <div
-              aria-hidden
-              className="absolute inset-0 opacity-25"
-              style={{
-                background:
-                  "radial-gradient(circle at center, white 0%, transparent 70%)",
-              }}
+              className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+              /* UBAH URL INI DENGAN FOTO KELAS MENENGAH DI FOLDER LOKALMU */
+              style={{ backgroundImage: "url('/images/panel1-wallet')" }} 
             />
-            <h3 className="font-bold tracking-widest text-sm text-white relative">
-              KELAS MENENGAH
-            </h3>
-            <div className="font-serif text-[7rem] md:text-[8rem] leading-none text-white/80 relative">
-              ?
+            {/* Overlay Gelap Kemerahan + Efek Blur biar tanda tanya menonjol */}
+            <div className="absolute inset-0 bg-orange-950/60 backdrop-blur-[2px]" />
+
+            <div className="relative z-10 flex flex-col items-center">
+              <h3 className="font-bold tracking-widest text-xs text-orange-200">
+                KELAS MENENGAH
+              </h3>
+              {/* Tanda tanya diperkecil sedikit dari 8rem jadi 7rem */}
+              <div className="font-serif text-[6rem] md:text-[7rem] leading-none text-white drop-shadow-lg">
+                ?
+              </div>
             </div>
-            <div className="absolute bottom-3 right-3 px-2 py-0.5 rounded-full text-[9px] tracking-widest font-bold uppercase bg-white/15 text-white border border-white/20">
+            <div className="absolute bottom-3 right-3 px-2 py-0.5 rounded-full text-[8px] tracking-widest font-bold uppercase bg-red-600/80 backdrop-blur-sm text-white">
               Tanpa Penopang
             </div>
           </div>
 
-          {/* KELAS ATAS — gold / assets */}
-          <div
-            className="relative rounded-2xl p-7 md:p-8 aspect-square flex flex-col items-center justify-center space-y-3 overflow-hidden shadow-sm"
-            style={{
-              background: "hsl(35 50% 86%)",
-              borderTop: "4px solid hsl(35 75% 45%)",
-            }}
-          >
+          {/* ================= KELAS ATAS (ASET) ================= */}
+          <div className="relative rounded-xl h-[240px] md:h-[280px] p-5 flex flex-col items-center justify-center overflow-hidden shadow-sm border border-black/10 group">
+            {/* Background Image */}
             <div
-              aria-hidden
-              className="absolute -top-6 -right-6 w-28 h-28 rounded-full opacity-25"
-              style={{ background: "hsl(35 75% 60%)" }}
+              className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+              /* UBAH URL INI DENGAN FOTO ASET/MEWAH DI FOLDER LOKALMU */
+              style={{ backgroundImage: "url('/images/syahroni.webp')" }} 
             />
-            {/* Stacked-blocks icon (assets) */}
-            <svg
-              width="40"
-              height="40"
-              viewBox="0 0 40 40"
-              fill="none"
-              className="relative"
-              aria-hidden
-            >
-              <rect
-                x="6"
-                y="22"
-                width="28"
-                height="10"
-                rx="1.5"
-                stroke="hsl(35 75% 30%)"
-                strokeWidth="2"
-                fill="none"
-              />
-              <rect
-                x="11"
-                y="13"
-                width="18"
-                height="9"
-                rx="1.5"
-                stroke="hsl(35 75% 30%)"
-                strokeWidth="2"
-                fill="none"
-              />
-              <rect
-                x="15"
-                y="5"
-                width="10"
-                height="8"
-                rx="1.5"
-                stroke="hsl(35 75% 30%)"
-                strokeWidth="2"
-                fill="none"
-              />
-            </svg>
-            <h3 className="font-bold tracking-widest text-sm text-foreground/85 relative">
-              KELAS ATAS
-            </h3>
-            <div
-              className="h-px w-12 relative"
-              style={{ background: "hsl(35 75% 45% / 0.5)" }}
-            />
-            <p className="text-sm text-foreground/75 relative max-w-[180px]">
-              Memiliki aset & investasi
-            </p>
-            <div
-              className="absolute bottom-3 right-3 px-2 py-0.5 rounded-full text-[9px] tracking-widest font-bold uppercase text-white"
-              style={{ background: "hsl(35 75% 45%)" }}
-            >
+            {/* Overlay Gelap Keabu-abuan */}
+            <div className="absolute inset-0 bg-slate-950/65" />
+
+            <div className="relative z-10 flex flex-col items-center">
+              <svg width="32" height="32" viewBox="0 0 40 40" fill="none" className="mb-2 opacity-80">
+                <rect x="6" y="22" width="28" height="10" rx="1.5" stroke="white" strokeWidth="2" fill="none"/>
+                <rect x="11" y="13" width="18" height="9" rx="1.5" stroke="white" strokeWidth="2" fill="none"/>
+                <rect x="15" y="5" width="10" height="8" rx="1.5" stroke="white" strokeWidth="2" fill="none"/>
+              </svg>
+              <h3 className="font-bold tracking-widest text-xs text-white">
+                KELAS ATAS
+              </h3>
+              <div className="h-px w-10 my-2 bg-white/30" />
+              <p className="text-xs text-white/80 max-w-[160px]">
+                Memiliki aset & investasi
+              </p>
+            </div>
+            <div className="absolute bottom-3 right-3 px-2 py-0.5 rounded-full text-[8px] tracking-widest font-bold uppercase text-white bg-amber-600/80 backdrop-blur-sm">
               Diuntungkan
             </div>
           </div>
+
         </div>
 
-        {/* Spectrum indicator below — visual placement of the three classes */}
-        <div className="reveal-up max-w-3xl mx-auto space-y-3">
-          <div
-            className="relative h-2.5 rounded-full overflow-hidden border border-foreground/10"
-            style={{
-              background:
-                "linear-gradient(90deg, hsl(150 28% 70%) 0%, hsl(15 60% 60%) 50%, hsl(35 65% 75%) 100%)",
-            }}
-          >
-            {/* Center pointer = kelas menengah */}
-            <div
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-6 rounded-full border-2"
-              style={{
-                background: "hsl(15 65% 45%)",
-                borderColor: "hsl(15 70% 25%)",
-              }}
-            />
-          </div>
-          <div className="flex justify-between text-[10px] tracking-widest uppercase font-bold">
-            <span style={{ color: "hsl(150 40% 28%)" }}>Bawah · Subsidi</span>
-            <span style={{ color: "hsl(15 60% 38%)" }}>Menengah · ?</span>
-            <span style={{ color: "hsl(35 75% 32%)" }}>Atas · Aset</span>
-          </div>
-        </div>
-
-        <p className="font-serif text-xl md:text-2xl reveal-up">
+        {/* Teks kesimpulan di bawah juga diperkecil */}
+        <p className="font-serif text-lg md:text-xl reveal-up text-foreground mt-2">
           Bantuan untuk kelas bawah. Aset untuk kelas atas.
           <br />
-          <span className="text-primary">Lalu untuk kelas menengah?</span>
+          <span className="text-primary font-semibold">Lalu untuk kelas menengah?</span>
         </p>
       </div>
     </section>
