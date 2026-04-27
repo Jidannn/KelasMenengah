@@ -27,17 +27,15 @@ const C_GREEN = "hsl(140 30% 48%)";
 const C_GREEN_BG = "hsl(140 28% 42%)";
 
 const DATA_PDB = [
-  { key: "C", name: "Konsumsi Rumah Tangga", value: 58.8, color: C_GREEN },
-  { key: "I", name: "Pembentukan Modal Tetap", value: 30.6, color: "hsl(var(--secondary))" },
-  { key: "G", name: "Belanja Pemerintah", value: 7.9, color: "hsl(var(--accent))" },
-  { key: "X", name: "Net Ekspor", value: 2.8, color: "hsl(var(--muted-foreground))" },
+  { key: "C", name: "Konsumsi Rumah Tangga", value: 58.8, color: "#009E73" },   // bluish-green
+  { key: "I", name: "Pembentukan Modal Tetap", value: 30.6, color: "#E69F00" }, // orange
+  { key: "G", name: "Belanja Pemerintah", value: 7.9, color: "#56B4E9" },       // sky blue
+  { key: "X", name: "Net Ekspor", value: 2.8, color: "#CC79A7" },               // pink/mauve
 ];
 
 const DATA_KONSUMSI_KELAS = [
-  { name: "Kelas Bawah", value: 4.5, color: "hsl(150 25% 78%)" },
-  { name: "Menuju Kelas Menengah", value: 10.0, color: "hsl(140 28% 62%)" },
-  { name: "Kelas Menengah", value: 81.5, color: "hsl(38 75% 72%)" },
-  { name: "Kelas Atas", value: 4.0, color: "hsl(120 18% 88%)" },
+  { name: "Kelas lainnya", value: 19.5, color: "#009E73" },
+  { name: "Kelas Menengah & Menuju Kelas Menengah", value: 81.5, color: "#E69F00" },
 ];
 
 const DATA_TREND = [
@@ -143,6 +141,45 @@ const CARD_ANNOTATIONS: Record<CardKey, Annotation[]> = {
   ],
 };
 
+// ============ PIE LABEL HELPER ============
+
+const RADIAN = Math.PI / 180;
+
+function makePieLabelRenderer({
+  textColor,
+  skipNames = [],
+}: {
+  textColor: string;
+  skipNames?: string[];
+}) {
+  return function renderLabel(props: any) {
+    const { cx, cy, midAngle, outerRadius, name, value } = props;
+    if (skipNames.includes(name)) return null;
+    const radius = outerRadius + 22;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+    const anchor = x > cx ? "start" : "end";
+    return (
+      <text
+        x={x}
+        y={y}
+        fill={textColor}
+        textAnchor={anchor}
+        dominantBaseline="central"
+        fontSize={11}
+        fontWeight={500}
+      >
+        <tspan x={x} dy="-0.55em">
+          {name}
+        </tspan>
+        <tspan x={x} dy="1.3em" fontWeight={700} fontSize={13}>
+          {value.toString().replace(".", ",")}%
+        </tspan>
+      </text>
+    );
+  };
+}
+
 // ============ HELPERS ============
 
 function useInView<T extends HTMLElement>(threshold = 0.4) {
@@ -191,18 +228,9 @@ function PanelNews() {
   return (
     <section
       data-panel
-      className="relative w-full min-h-screen flex items-center justify-center px-6 md:px-16 py-24 overflow-hidden"
+      className="relative w-full h-screen flex items-center justify-center px-6 md:px-16 py-16 overflow-hidden"
       style={{ background: "hsl(28 35% 90%)" }}
     >
-      {/* Decorative right-edge brand band */}
-      {/* <div
-        className="absolute top-0 bottom-0 right-0 w-[10px] md:w-[14px]"
-        style={{
-          background:
-            "linear-gradient(to bottom, hsl(15 55% 52%) 0%, hsl(15 60% 45%) 50%, hsl(150 38% 35%) 100%)",
-        }}
-        aria-hidden
-      /> */}
       {/* Subtle horizontal "newsprint" lines */}
       <div
         aria-hidden
@@ -219,29 +247,32 @@ function PanelNews() {
         style={{ background: "hsl(35 70% 70%)" }}
       />
 
-      <div className="relative max-w-3xl w-full space-y-12">
+      <div className="relative max-w-5xl w-full space-y-5">
         {/* Masthead */}
         <div className="flex items-center gap-3 md:gap-4 pb-4 border-b-2 border-foreground/15">
           <div
-            className="px-2.5 py-1 text-[10px] tracking-[0.3em] font-bold uppercase text-white shadow-sm"
+            className="px-3 py-1.5 text-xs md:text-sm tracking-[0.3em] font-bold uppercase text-white shadow-sm"
             style={{ background: "hsl(15 60% 50%)" }}
           >
             Terkini
           </div>
-          <Newspaper className="w-4 h-4 text-foreground/55" />
-          <p className="text-xs tracking-[0.3em] uppercase text-foreground/60 font-bold">
-            Berita Hari Ini
+          <Newspaper className="w-5 h-5 text-foreground/55" />
+          <p className="text-sm tracking-[0.3em] uppercase text-foreground/60 font-bold">
+            Berita April 2026
           </p>
-          <span className="ml-auto text-[10px] tracking-widest uppercase text-foreground/45">
-            April 2026
-          </span>
         </div>
+
+        {/* Helper info: clickable titles */}
+        <p className="reveal-up text-sm italic text-foreground/55 flex items-center gap-2">
+          <MousePointer2 className="w-4 h-4" />
+          Tekan judul berita untuk membaca artikel lengkap
+        </p>
 
         {/* News article 1 */}
         <article className="space-y-3 reveal-up">
-          <div className="flex items-center gap-2 text-[10px] tracking-[0.25em] uppercase font-bold">
+          <div className="flex items-center gap-2 text-xs tracking-[0.25em] uppercase font-bold">
             <span
-              className="px-2 py-1 rounded-sm"
+              className="px-2.5 py-1 rounded-sm"
               style={{
                 background: "hsl(15 60% 50% / 0.15)",
                 color: "hsl(15 55% 38%)",
@@ -250,22 +281,30 @@ function PanelNews() {
               Ekonomi
             </span>
             <span className="h-px flex-1 bg-foreground/15" />
-            <span className="text-foreground/50">Sumber Berita</span>
+            <span className="text-foreground/50">Berita Satu</span>
           </div>
-          <h3
-            className="font-serif text-2xl md:text-4xl leading-tight text-foreground border-l-[3px] pl-5"
-            style={{ borderColor: "hsl(15 60% 50%)" }}
+
+          <a
+            href="https://www.beritasatu.com/network/kabarsinjai/825269/iuran-bpjs-kesehatan-berpotensi-naik-2026-pemerintah-targetkan-kelas-menengah#goog_rewarded"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block group"
           >
-            Iuran BPJS Kesehatan Berpotensi Naik 2026, Pemerintah Targetkan{" "}
-            <span style={{ color: "hsl(15 55% 42%)" }}>Kelas Menengah</span>
-          </h3>
+            <h3
+              className="font-serif text-2xl md:text-[2.5rem] lg:text-[3.25rem] leading-[1.15] text-foreground border-l-[4px] pl-5 transition-colors group-hover:text-[hsl(15_55%_42%)]"
+              style={{ borderColor: "hsl(15 60% 50%)" }}
+            >
+              Iuran BPJS Kesehatan Berpotensi Naik 2026, Pemerintah Targetkan{" "}
+              <span style={{ color: "hsl(15 55% 42%)" }}>Kelas Menengah</span>
+            </h3>
+          </a>
         </article>
 
         {/* News article 2 */}
         <article className="space-y-3 reveal-up">
-          <div className="flex items-center gap-2 text-[10px] tracking-[0.25em] uppercase font-bold">
+          <div className="flex items-center gap-2 text-xs tracking-[0.25em] uppercase font-bold">
             <span
-              className="px-2 py-1 rounded-sm"
+              className="px-2.5 py-1 rounded-sm"
               style={{
                 background: "hsl(150 38% 42% / 0.18)",
                 color: "hsl(150 40% 25%)",
@@ -276,34 +315,22 @@ function PanelNews() {
             <span className="h-px flex-1 bg-foreground/15" />
             <span className="text-foreground/50">BBC News Indonesia</span>
           </div>
-          <h3
-            className="font-serif text-2xl md:text-4xl leading-tight text-foreground border-l-[3px] pl-5"
-            style={{ borderColor: "hsl(150 38% 42%)" }}
+          <a
+            href="https://www.bbc.com/indonesia/articles/c1j74g2dx15o"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block group"
           >
-            Warga{" "}
-            <span style={{ color: "hsl(150 40% 28%)" }}>kelas menengah</span>{" "}
-            paling terbebani kenaikan harga BBM dan LPG nonsubsidi
-          </h3>
-          <p className="text-base text-foreground/65 italic pl-5">
-            "Gaji tetap, biaya hidup naik, tapi dianggap{" "}
-            <span className="text-foreground font-semibold not-italic">
-              terlalu kaya
-            </span>{" "}
-            untuk dapat subsidi."
-          </p>
+            <h3
+              className="font-serif text-2xl md:text-[2.5rem] lg:text-[3.25rem] leading-[1.15] text-foreground border-l-[4px] pl-5 transition-colors group-hover:text-[hsl(150_40%_28%)]"
+              style={{ borderColor: "hsl(150 38% 42%)" }}
+            >
+              Warga{" "}
+              <span style={{ color: "hsl(150 40% 28%)" }}>kelas menengah</span>{" "}
+              paling terbebani kenaikan harga BBM dan LPG nonsubsidi
+            </h3>
+          </a>
         </article>
-
-        {/* Pull-quote sliver */}
-        {/* <div className="flex items-start gap-3 pt-2">
-          <div
-            className="w-1 flex-shrink-0 rounded-full mt-1"
-            style={{ background: "hsl(35 75% 55%)", height: "44px" }}
-          />
-          <p className="text-sm md:text-base text-foreground/65 leading-relaxed max-w-md">
-            Dua judul. Satu kesimpulan: kelas menengah Indonesia sedang
-            dipojokkan dari banyak sisi.
-          </p>
-        </div> */}
       </div>
 
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-foreground/55 text-xs tracking-widest uppercase">
@@ -325,70 +352,33 @@ function PanelWelcome() {
       {/* 1. Background Image: Jakarta Citylight */}
       <div 
         className="absolute inset-0 bg-cover bg-center grayscale-[20%] brightness-[0.7]"
-        style={{ backgroundImage: "url('/images/panel1-wallet.png')" }} 
+        style={{ backgroundImage: "url('/images/welcome.jpeg')" }} 
       />
       {/* 2. Gradient Overlay untuk keterbacaan */}
       <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/50" />
       
       {/* 3. Konten z-10 */}
       <div className="relative z-10 max-w-4xl text-center space-y-6 reveal-up">
-        <p className="text-sm tracking-[0.3em] uppercase text-primary font-bold">
-          Selamat datang
+        <p
+          className="text-sm tracking-[0.3em] uppercase font-bold"
+          style={{ color: "hsl(38, 67%, 56%)" }}
+        >
+          Tidak Cukup Miskin Untuk Dapat Bantuan, Tidak Cukup Kaya Untuk Merasa Aman
         </p>
         <h2 className="font-serif text-4xl md:text-7xl leading-[1.1] text-white">
           Selamat datang ke kehidupan kelas menengah di Indonesia.
         </h2>
       </div>
+
+      {/* 4. Photo credit */}
+      <p className="absolute bottom-4 right-5 z-20 text-[10px] text-white/50 tracking-widest">
+        Foto: Agung Prasetyo - Unsplash
+      </p>
     </section>
   );
 }
 
-// ============ PANEL 1: HOOK ============
-
-function PanelHook() {
-  return (
-    <section
-      data-panel
-      className="relative w-full h-screen flex items-center justify-center px-6 md:px-16 py-12 overflow-hidden"
-      style={{
-        background: `
-          radial-gradient(ellipse 70% 50% at 90% 90%, hsl(35 75% 55% / 0.13) 0%, transparent 55%),
-          radial-gradient(ellipse 50% 40% at 10% 15%, hsl(15 55% 50% / 0.09) 0%, transparent 50%),
-          hsl(25 32% 90%)
-        `
-      }}
-    >
-      <div className="max-w-3xl text-center space-y-10">
-        <p className="reveal-up text-xs tracking-[0.3em] uppercase text-muted-foreground font-bold">
-          Panel 01
-        </p>
-
-        <h2 className="reveal-up font-serif text-4xl md:text-4xl leading-[1.15] text-foreground">
-          Punya pekerjaan tetap.
-          <br />
-          Bukan orang miskin.
-          <br />
-          Tapi tiap akhir bulan selalu was-was.
-        </h2>
-
-        <div className="reveal-up mx-auto w-full max-w-md aspect-[4/3] rounded-xl overflow-hidden shadow-md">
-          <img
-            src="/images/panel1-foto.webp"
-            alt="Kehidupan kelas menengah"
-            className="w-full h-full object-cover"
-          />
-        </div>
-
-        <p className="reveal-up text-lg md:text-xl text-muted-foreground">
-          Tidak dapat bansos, tidak dapat subsidi LPG 3 Kg — tapi harga-harga
-          terus naik.
-        </p>
-      </div>
-    </section>
-  );
-}
-
-// ============ PANEL 2: DEFINITION + ZOOM INTO C → GREEN PAGE ============
+// ============ PANEL 2: DEFINITION + ZOOM INTO C → GREEN PAGE (UPDATED) ============
 
 function PanelDefinitionZoom() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -407,40 +397,137 @@ function PanelDefinitionZoom() {
         },
       });
 
-      // Stage A → B: definition fades, pie zooms toward C slice
       tl.to(".def-text", { opacity: 0, x: -120, duration: 1, ease: "power2.in" }, 0)
+      
+        // 1. Hilangkan Label HTML (foreignObject)
+        .to(".pdb-pie-wrap foreignObject", { 
+          opacity: 0, 
+          duration: 0.3,
+          ease: "power2.out"
+        }, 0)
+
+        .to(".pdb-pie-wrap .recharts-pie-sector:nth-child(n+2)", { 
+          opacity: 0, 
+          duration: 0.4,
+          ease: "power2.out"
+        }, 0)
+
+        // 3. Zoom chart-nya
         .to(
           ".pdb-pie-wrap",
           {
-            scale: 2.6,
-            x: "18%",
-            y: "8%",
+            scale: 1.8, 
+            x: "22%",
+            y: "0%", 
+            rotation: 90,
             duration: 1.4,
             ease: "power2.inOut",
           },
           0
         )
+
         .to(".c-callout", { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, ">-0.3")
-        // Stage C: GREEN PAGE expands from C slice covering everything
-        .to(
-          ".green-page",
-          { scale: 1, duration: 1.2, ease: "power2.inOut" },
-          ">+0.1"
-        )
-        .to(
-          ".green-content",
-          { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" },
-          ">-0.5"
-        )
-        .to(
-          ".km-annotation",
-          { opacity: 1, x: 0, duration: 0.7, ease: "power2.out" },
-          ">-0.2"
-        )
-        .to({}, { duration: 1.2 }); // hold the green page before unpinning
+        .to(".green-page", { scale: 1, duration: 1.2, ease: "power2.inOut" }, ">+0.1")
+        .to(".green-content", { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, ">-0.5")
+        .to({}, { duration: 1.2 });
     },
     { scope: sectionRef }
   );
+
+  // Reusable label renderer modeling Panel 5
+  const renderAnnotatedLabel = (data: any[]) => (props: any) => {
+    const { cx, cy, midAngle, outerRadius, value, name, index } = props;
+    const RADIAN = Math.PI / 180;
+    
+    const radius = outerRadius + 20; 
+    
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+    const isLeft = x < cx;
+    
+    // Ukuran box sedikit disesuaikan agar lebih proporsional
+    const boxWidth = 175;
+    const boxHeight = 54;
+    
+    // Beri margin horizontal tambahan dari titik kordinat
+    let foX = isLeft ? x - boxWidth - 3 : x + 3;
+    let foY = y - boxHeight / 2;
+
+    return (
+      <foreignObject
+        x={foX}
+        y={foY}
+        width={boxWidth}
+        height={boxHeight}
+        className="overflow-visible"
+      >
+        <div
+          className={`w-full h-full flex flex-col justify-center ${
+            isLeft ? "items-end" : "items-start"
+          }`}
+        >
+          {/* py-1.5 diubah jadi py-1 agar tinggi box sedikit menyusut */}
+          <div
+            className="w-max flex flex-col px-3 py-1 rounded-lg shadow-md border bg-white/95 backdrop-blur-sm"
+            style={{ borderColor: data[index].color }}
+          >
+            <span className="text-[10px] md:text-[11px] leading-tight text-muted-foreground font-medium">
+              {name}
+            </span>
+            <span
+              className="text-[11px] md:text-xs font-bold leading-tight mt-0.5"
+              style={{ color: data[index].color }}
+            >
+              {value.toString().replace(".", ",")}%
+            </span>
+          </div>
+        </div>
+      </foreignObject>
+    );
+  };
+
+  const renderCenterLabel = (data: any[]) => (props: any) => {
+    const { cx, cy, midAngle, innerRadius, outerRadius, value, name, index } = props;
+    
+    // Jika ini adalah highlight utama (81,5%)
+    if (name.includes("Menengah")) {
+      return (
+        <foreignObject 
+          x={cx - 80} 
+          y={cy - 40} 
+          width={160} 
+          height={80} 
+          className="overflow-visible"
+        >
+          <div className="w-full h-full flex flex-col items-center justify-center text-center">
+            <span className="text-[10px] uppercase tracking-[0.2em] text-white/60 font-bold">
+              {name}
+            </span>
+            <span className="text-4xl md:text-5xl font-serif font-bold text-[hsl(38,80%,82%)] leading-none mt-1">
+              {value.toString().replace(".", ",")}%
+            </span>
+          </div>
+        </foreignObject>
+      );
+    }
+
+    // Untuk kategori lainnya (19,5%), kita taro di atas chart secara bersih
+    const RADIAN = Math.PI / 180;
+    const radius = outerRadius + 30;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+    return (
+      <foreignObject x={x - 60} y={y - 25} width={120} height={50} className="overflow-visible">
+        <div className="flex flex-col items-center justify-center opacity-70">
+          <div className="px-2 py-1 rounded-md border border-white/20 bg-black/10 backdrop-blur-sm text-center">
+            <p className="text-[9px] text-white/80 leading-tight">{name}</p>
+            <p className="text-xs font-bold text-white">{value}%</p>
+          </div>
+        </div>
+      </foreignObject>
+    );
+  };
 
   return (
     <section
@@ -452,9 +539,9 @@ function PanelDefinitionZoom() {
       <div className="absolute inset-0 grid md:grid-cols-2 gap-12 items-center px-6 md:px-16 py-16">
         {/* LEFT: Definition */}
         <div className="def-text space-y-6 max-w-lg">
-          <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground font-bold">
+          {/* <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground font-bold">
             Panel 02 — Definisi
-          </p>
+          </p> */}
           <h2 className="font-serif text-4xl md:text-5xl leading-tight">
             Kelas Menengah Indonesia
           </h2>
@@ -467,100 +554,60 @@ function PanelDefinitionZoom() {
               per bulan.
             </p>
           </div>
-          <p className="text-base text-muted-foreground italic">
-            Mereka bukan miskin. Mereka bukan kaya. Mereka tulang punggung yang
-            sering tidak terlihat.
-          </p>
         </div>
 
-        {/* RIGHT: PDB Pie that will zoom */}
-        <div className="relative w-full h-full flex flex-col items-center justify-center gap-8">
-          <div className="pdb-pie-wrap relative w-[68%] aspect-square max-w-sm origin-center">
-            <p className="absolute -top-10 left-1/2 -translate-x-1/2 text-xs tracking-[0.3em] uppercase text-muted-foreground font-bold whitespace-nowrap">
-              PDB Indonesia 2024 = C + I + G + X
-            </p>
+        {/* RIGHT: PDB Pie with Annotated Labels */}
+        <div className="relative w-full h-full flex flex-col items-center justify-center">
+          <div className="pdb-pie-wrap relative w-full aspect-square max-w-xl origin-center">
             <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
+              <PieChart margin={{ top: 40, right: 120, bottom: 40, left: 120 }}>
                 <Pie
+                  className="pdb-label-container" // Class ini membungkus semua label
                   data={DATA_PDB}
                   cx="50%"
                   cy="50%"
-                  innerRadius="35%"
-                  outerRadius="95%"
+                  innerRadius="30%"
+                  outerRadius="75%"
                   paddingAngle={1}
                   dataKey="value"
-                  startAngle={90}
-                  endAngle={-270}
+                  startAngle={-200}
+                  endAngle={160}
                   isAnimationActive={false}
+                  label={renderAnnotatedLabel(DATA_PDB)}
+                  labelLine={false}
                 >
                   {DATA_PDB.map((entry) => (
-                    <Cell key={entry.key} fill={entry.color} />
+                    <Cell 
+                      key={entry.key} 
+                      fill={entry.color} 
+                    />
                   ))}
                 </Pie>
               </PieChart>
             </ResponsiveContainer>
           </div>
-
-          {/* Proportional legend bar — width of each segment matches percentage */}
-          <div className="pdb-legend w-full max-w-xl space-y-3 px-2">
-            <div className="flex w-full h-3 rounded-full overflow-hidden border border-border/50 shadow-sm">
-              {DATA_PDB.map((d) => (
-                <div
-                  key={d.key}
-                  style={{ width: `${d.value}%`, background: d.color }}
-                  title={`${d.name} ${d.value}%`}
-                />
-              ))}
-            </div>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-[11px] md:text-xs">
-              {DATA_PDB.map((d) => (
-                <div key={d.key} className="flex items-center gap-2">
-                  <span
-                    className="w-2.5 h-2.5 rounded-sm shrink-0"
-                    style={{ background: d.color }}
-                  />
-                  <span className="text-muted-foreground whitespace-nowrap">
-                    {d.name}{" "}
-                    <span className="font-bold text-foreground">
-                      {d.value.toString().replace(".", ",")}%
-                    </span>
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
 
-      {/* Callout: positioned BESIDE the pie chart (left side of viewport) so it
-          appears next to the zoomed pie during the scroll animation. Wrapper
-          handles positioning; inner .c-callout handles GSAP opacity + y. */}
+      {/* Callout during zoom */}
       <div
         className="absolute z-20 pointer-events-none"
         style={{
           left: "6%",
           top: "50%",
-          transform: "translateY(-50%)",
+          transform: "translateY(-50%) scale(2)",
+          transformOrigin: "left center",
           maxWidth: "320px",
         }}
       >
-        <div
-          className="c-callout opacity-0"
-          style={{ transform: "translateY(20px)" }}
-        >
-          <p
-            className="text-xs tracking-[0.3em] uppercase font-bold"
-            style={{ color: C_GREEN }}
-          >
+        <div className="c-callout opacity-0 translate-y-5">
+          <p className="text-xs tracking-[0.3em] uppercase font-bold" style={{ color: C_GREEN }}>
             Konsumsi Rumah Tangga
           </p>
           <p className="font-serif text-4xl md:text-6xl mt-2 text-foreground leading-none">
             58,8%
           </p>
-          <p
-            className="text-xs tracking-[0.25em] uppercase font-bold mt-1"
-            style={{ color: C_GREEN }}
-          >
+          <p className="text-xs tracking-[0.25em] uppercase font-bold mt-1" style={{ color: C_GREEN }}>
             dari PDB
           </p>
           <p className="text-sm text-foreground/70 italic mt-3 max-w-xs">
@@ -569,19 +616,8 @@ function PanelDefinitionZoom() {
         </div>
       </div>
 
-      {/* GREEN CIRCLE — emerges from C slice as a perfect round shape.
-          Wrapper handles positioning (top/left + translate centering)
-          so GSAP can safely animate `scale` on .green-page without
-          clobbering the centering transform. */}
-      <div
-        className="absolute z-30 pointer-events-none"
-        style={{
-          top: "50%",
-          left: "78%",
-          width: 0,
-          height: 0,
-        }}
-      >
+      {/* GREEN OVERLAY CIRCLE */}
+      <div className="absolute z-30 pointer-events-none" style={{ top: "50%", left: "78%", width: 0, height: 0 }}>
         <div
           className="green-page"
           style={{
@@ -601,13 +637,10 @@ function PanelDefinitionZoom() {
         />
       </div>
 
-      {/* GREEN CONTENT — fades in over the green circle, anchored to viewport */}
+      {/* GREEN CONTENT WITH SECOND ANNOTATED PIE */}
       <div className="green-content absolute inset-0 z-40 flex items-center justify-center px-6 md:px-16 py-12 opacity-0 translate-y-6 pointer-events-none">
         <div className="max-w-6xl w-full grid md:grid-cols-2 gap-10 md:gap-16 items-center">
           <div className="space-y-4 text-white">
-            <p className="text-xs tracking-[0.3em] uppercase font-bold text-white/70">
-              Panel 02 · Konsumsi Rumah Tangga = 58,8% PDB
-            </p>
             <h2 className="font-serif text-3xl md:text-5xl leading-tight">
               Siapa yang sebenarnya menggerakkan konsumsi nasional?
             </h2>
@@ -619,93 +652,35 @@ function PanelDefinitionZoom() {
               menyumbang porsi paling besar. Mereka adalah mesin utama
               konsumsi yang menggerakkan ekonomi.
             </p>
-            <p className="text-sm text-white/70 italic pt-2">
-              Sumber: BPS, KIMCI 2026
-            </p>
+            <p className="text-sm text-white/70 italic pt-2">Sumber: BPS, KIMCI 2026</p>
           </div>
 
-          <div className="relative w-full">
-            {/* Pie + side annotation */}
-            <div className="flex items-center justify-end gap-3 md:gap-6">
-              <div className="relative h-[280px] w-[280px] md:h-[360px] md:w-[360px] shrink-0 transform translate-x-16">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={DATA_KONSUMSI_KELAS}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius="36%"
-                      outerRadius="88%"
-                      paddingAngle={1}
-                      dataKey="value"
-                      startAngle={90}
-                      endAngle={-270}
-                      stroke="hsl(140 30% 35%)"
-                      strokeWidth={2}
-                      isAnimationActive={false}
-                    >
-                      {DATA_KONSUMSI_KELAS.map((entry, i) => (
-                        <Cell key={i} fill={entry.color} />
-                      ))}
-                    </Pie>
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-
-              {/* Annotation pointing from the pie's right edge */}
-              <div className="km-annotation flex items-center gap-2 md:gap-3 opacity-0 shrink-0 -ml-4">
-                <svg
-                  width="48"
-                  height="40"
-                  viewBox="0 0 48 40"
-                  fill="none"
-                  className="shrink-0"
-                  aria-hidden
-                >
-                  <circle cx="6" cy="20" r="3.5" fill="hsl(38 80% 22%)" />
-                  <line
-                    x1="6"
-                    y1="20"
-                    x2="50"
-                    y2="20"
-                    stroke="hsl(38 80% 22%)"
-                    strokeWidth="1.5"
-                    strokeDasharray="3 3"
-                  />
-                </svg>
-                <div className="text-left">
-                  <p
-                    className="font-serif text-5xl md:text-6xl leading-none font-bold"
-                    style={{ color: "hsl(38 80% 82%)" }}
+          <div className="relative w-full flex flex-col items-center">
+            <div className="relative h-[320px] md:h-[400px] w-full max-w-lg">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={DATA_KONSUMSI_KELAS}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius="45%" // Diperbesar sedikit agar teks "Center" pas
+                    outerRadius="80%"
+                    paddingAngle={2}
+                    dataKey="value"
+                    startAngle={90}
+                    endAngle={-270}
+                    stroke="hsl(140 30% 35%)"
+                    strokeWidth={2}
+                    isAnimationActive={true}
+                    label={renderCenterLabel(DATA_KONSUMSI_KELAS)}
+                    labelLine={false} // Matikan garis agar tidak "nyampah"
                   >
-                    81,5%
-                  </p>
-                  <p className="text-[11px] uppercase tracking-[0.25em] text-white font-bold mt-2">
-                    Kelas Menengah
-                  </p>
-                  <p className="text-[11px] text-white/75 italic mt-1 max-w-[150px]">
-                    Kontribusi terbesar konsumsi
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Legend below — aligned & centered with the chart */}
-            <div className="mt-8 mx-auto max-w-md grid grid-cols-2 gap-x-4 gap-y-2 text-[11px] text-white/90">
-              {DATA_KONSUMSI_KELAS.map((d, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <span
-                    className="w-3 h-3 rounded-sm shrink-0"
-                    style={{ background: d.color }}
-                  />
-                  <span className="text-muted-foreground leading-tight">
-                    {d.name}{" "}
-                    <span className="font-bold text-foreground">
-                      {d.value.toString().replace(".", ",")}%
-                    </span>
-                  </span>
-                </div>
-              ))}
+                    {DATA_KONSUMSI_KELAS.map((entry, i) => (
+                      <Cell key={i} fill={entry.color} />
+                    ))}
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
             </div>
           </div>
         </div>
@@ -728,9 +703,6 @@ function PanelShrinking() {
     >
       <div className="max-w-5xl w-full space-y-10">
         <div className="space-y-3 text-center">
-          <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground font-bold">
-            Panel 03 — Penyusutan
-          </p>
           <h2 className="font-serif text-3xl md:text-5xl leading-tight">
             Tapi… jumlah kelas menengah terus menyusut.
           </h2>
@@ -812,9 +784,6 @@ function PanelAlarm() {
       {/* space-y-14 dikurangi jadi space-y-8 */}
       <div className="max-w-5xl w-full space-y-8 text-center">
         <div className="space-y-2 reveal-up">
-          <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground font-bold">
-            Panel 04 — Alarm Sunyi
-          </p>
           {/* Ukuran font judul diperkecil dari text-5xl jadi text-4xl */}
           <h2 className="font-serif text-2xl md:text-4xl leading-tight max-w-3xl mx-auto text-foreground">
             Kelas menengah menghadapi sebuah "alarm sunyi" kerentanan.
@@ -936,15 +905,16 @@ function PanelAlarm() {
 // ============ PANEL 5: PENGELUARAN ============
 
 function PanelExpenses() {
-  const { ref, inView } = useInView<HTMLDivElement>(0.4);
-  const [chartKey, setChartKey] = useState(0);
+  // Pakai threshold 0.3 supaya pas 30% panel muncul, animasi langsung siap-siap
+  const { ref, inView } = useInView<HTMLDivElement>(0.3);
+  const [hasViewed, setHasViewed] = useState(false);
 
   useEffect(() => {
-    if (inView) {
-      // Setiap kali masuk viewport, ganti key → Recharts remount → animasi ulang
-      setChartKey((k) => k + 1);
+    // Kunci di sini: Begitu inView TRUE, hasViewed jadi TRUE selamanya
+    if (inView && !hasViewed) {
+      setHasViewed(true);
     }
-  }, [inView]);
+  }, [inView, hasViewed]);
 
   return (
     <section
@@ -954,8 +924,8 @@ function PanelExpenses() {
       style={{ background: "hsl(15 30% 90%)" }}
     >
       <div className="max-w-6xl w-full grid md:grid-cols-2 gap-16 items-center">
-
-        {/* ================= SISI KIRI: TEKS ================= */}
+        
+        {/* SISI KIRI: TEKS (TIDAK BERUBAH) */}
         <div className="space-y-10">
           <div className="space-y-3">
             <h2 className="font-serif text-4xl md:text-6xl leading-[1.1] tracking-tight">
@@ -991,79 +961,79 @@ function PanelExpenses() {
           </div>
         </div>
 
-        {/* ================= SISI KANAN: PIE CHART ================= */}
+        {/* SISI KANAN: PIE CHART */}
         <div className="w-full flex flex-col items-center">
           <div className="relative h-[400px] md:h-[450px] w-full max-w-2xl">
-            {/* key={chartKey} → paksa Recharts remount tiap masuk viewport */}
-            <ResponsiveContainer key={chartKey} width="100%" height="100%">
-              <PieChart margin={{ top: 20, right: 120, bottom: 20, left: 120 }}>
-                <Pie
-                  data={inView ? DATA_PENGELUARAN : []}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius="40%"
-                  outerRadius="80%"
-                  paddingAngle={2}
-                  dataKey="value"
-                  startAngle={-300}
-                  endAngle={60}
-                  isAnimationActive={true}
-                  animationDuration={2000}
-                  animationBegin={0}
-                  labelLine={{
-                    stroke: "hsl(var(--muted-foreground))",
-                    strokeWidth: 1,
-                    opacity: 0.5,
-                  }}
-                  label={({ cx, cy, midAngle, outerRadius, value, name, index }) => {
-                    const RADIAN = Math.PI / 180;
-                    const radius = outerRadius + 15;
-                    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-                    const y = cy + radius * Math.sin(-midAngle * RADIAN);
-                    const isLeft = x < cx;
-                    const boxWidth = 200;
-                    const boxHeight = 60;
-                    const foX = isLeft ? x - boxWidth : x;
-                    const foY = y - boxHeight / 2;
+            {/* 1. Pakai key dinamis yang berubah dari 0 ke 1 cuma SEKALI */}
+            <ResponsiveContainer width="100%" height="100%">
+                <PieChart margin={{ top: 20, right: 120, bottom: 20, left: 120 }}>
+                  <Pie
+                    data={DATA_PENGELUARAN}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius="40%"
+                    outerRadius="80%"
+                    paddingAngle={2}
+                    dataKey="value"
+                    startAngle={-300}
+                    endAngle={60}
+                    isAnimationActive={hasViewed}
+                    animationDuration={1500}
+                    animationBegin={200}
+                    labelLine={{
+                      stroke: "hsl(var(--muted-foreground))",
+                      strokeWidth: 1,
+                      opacity: 0.5,
+                    }}
+                    label={({ cx, cy, midAngle, outerRadius, value, name, index }) => {
+                      const RADIAN = Math.PI / 180;
+                      const radius = outerRadius + 15;
+                      const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                      const y = cy + radius * Math.sin(-midAngle * RADIAN);
+                      const isLeft = x < cx;
+                      const boxWidth = 200;
+                      const boxHeight = 60;
+                      const foX = isLeft ? x - boxWidth : x;
+                      const foY = y - boxHeight / 2;
 
-                    return (
-                      <foreignObject
-                        x={foX}
-                        y={foY}
-                        width={boxWidth}
-                        height={boxHeight}
-                        className="overflow-visible"
-                      >
-                        <div
-                          className={`w-full h-full flex flex-col justify-center transition-all duration-700 ${
-                            isLeft ? "items-end" : "items-start"
-                          } opacity-100 translate-y-0`}
-                          style={{ transitionDelay: `${index * 150 + 1000}ms` }}
+                      return (
+                        <foreignObject
+                          x={foX}
+                          y={foY}
+                          width={boxWidth}
+                          height={boxHeight}
+                          className="overflow-visible"
                         >
                           <div
-                            className="w-max flex flex-col px-3 py-1.5 rounded-lg shadow-sm border bg-white/95 backdrop-blur-sm"
-                            style={{ borderColor: DATA_PENGELUARAN[index].color }}
+                            className={`w-full h-full flex flex-col justify-center transition-all duration-700 animate-in fade-in slide-in-from-bottom-2 fill-mode-both ${
+                              isLeft ? "items-end" : "items-start"
+                            }`}
+                            style={{ animationDelay: `${index * 150 + 1000}ms` }}
                           >
-                            <span className="text-[10px] md:text-[11px] leading-tight text-muted-foreground font-medium">
-                              {name}
-                            </span>
-                            <span
-                              className="text-[11px] md:text-xs font-bold leading-tight mt-0.5"
-                              style={{ color: DATA_PENGELUARAN[index].color }}
+                            <div
+                              className="w-max flex flex-col px-3 py-1.5 rounded-lg shadow-sm border bg-white/95 backdrop-blur-sm"
+                              style={{ borderColor: DATA_PENGELUARAN[index].color }}
                             >
-                              {value.toString().replace(".", ",")}%
-                            </span>
+                              <span className="text-[10px] md:text-[11px] leading-tight text-muted-foreground font-medium">
+                                {name}
+                              </span>
+                              <span
+                                className="text-[11px] md:text-xs font-bold leading-tight mt-0.5"
+                                style={{ color: DATA_PENGELUARAN[index].color }}
+                              >
+                                {value.toString().replace(".", ",")}%
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      </foreignObject>
-                    );
-                  }}
-                >
-                  {DATA_PENGELUARAN.map((entry, i) => (
-                    <Cell key={i} fill={entry.color} />
-                  ))}
-                </Pie>
-              </PieChart>
+                        </foreignObject>
+                      );
+                    }}
+                  >
+                    {DATA_PENGELUARAN.map((entry, i) => (
+                      <Cell key={i} fill={entry.color} />
+                    ))}
+                  </Pie>
+                </PieChart>
             </ResponsiveContainer>
           </div>
         </div>
@@ -1497,16 +1467,6 @@ function PanelBappenas() {
           {/* Axis labels */}
           <div className="relative flex justify-between text-xs text-muted-foreground">
             <span>0%</span>
-            <span
-              className="absolute font-semibold"
-              style={{
-                left: "70%",
-                transform: "translateX(-50%)",
-                color: "hsl(var(--foreground) / 0.6)",
-              }}
-            >
-              70%
-            </span>
             <span>100%</span>
           </div>
         </div>
@@ -1788,7 +1748,6 @@ export default function Home() {
 
       <PanelNews />
       <PanelWelcome />
-      <PanelHook />
       <PanelDefinitionZoom />
       <PanelShrinking />
       <PanelAlarm />
