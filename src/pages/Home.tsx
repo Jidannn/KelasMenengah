@@ -1466,24 +1466,25 @@ function PanelBarChart() {
     <section
       ref={ref}
       data-panel
-      className="relative w-full min-h-screen flex items-center justify-center px-6 md:px-16 py-24"
+      className="relative w-full min-h-screen flex items-center justify-center px-6 md:px-16 py-12 overflow-hidden"
       style={{ background: "hsl(40 38% 84%)" }}
     >
-      <div className="max-w-4xl w-full space-y-10">
-        <div className="space-y-3">
+      <div className="max-w-3xl w-full space-y-6 md:space-y-8">
+        <div className="space-y-2">
           <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground font-bold">
-            Panel 09 — Kecemasan Masa Depan
           </p>
-          <h2 className="font-serif text-3xl md:text-5xl leading-tight">
-            Hari ini sudah berat. Bagaimana nanti?
+          {/* Perubahan: Menggunakan flex-row dan whitespace-nowrap agar teks tetap satu baris */}
+          <h2 className="font-serif text-3xl md:text-5xl leading-tight flex flex-row gap-x-3 whitespace-nowrap">
+            <span>Hari ini sudah berat.</span>
+            <span>Bagaimana nanti?</span>
           </h2>
-          <p className="text-base text-muted-foreground italic max-w-2xl">
+          <p className="text-base text-muted-foreground italic">
             Persentase kelas menengah yang merasa cemas terhadap aspek-aspek
             berikut di hari tua.
           </p>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-3 md:space-y-5">
           {KECEMASAN.map((item, i) => (
             <div key={i} className="space-y-2">
               <div className="flex justify-between items-baseline gap-4 text-sm md:text-base">
@@ -1498,17 +1499,17 @@ function PanelBarChart() {
                   {item.val}%
                 </span>
               </div>
-              <div className="h-4 w-full bg-muted/50 rounded-full overflow-hidden border border-border/40 shadow-inner">
+              {/* Perubahan: border warna hitam */}
+              <div 
+                className="h-3 w-full bg-muted/40 rounded-full overflow-hidden border shadow-inner"
+                style={{ borderColor: "#8f3e26" }} 
+              >
                 <div
                   className="h-full rounded-full"
                   style={{
                     width: run ? `${item.val}%` : "0%",
-                    background:
-                      i === 0
-                        ? "linear-gradient(90deg, hsl(0 55% 45%), hsl(0 60% 55%))"
-                        : i === 1
-                        ? "linear-gradient(90deg, hsl(15 55% 45%), hsl(15 60% 55%))"
-                        : "linear-gradient(90deg, hsl(15 50% 55%), hsl(35 55% 65%))",
+                    // Perubahan: Warna merah keorenan solid
+                    background: "hsl(15 85% 55%)",
                     transition: `width 1300ms cubic-bezier(0.22, 1, 0.36, 1) ${
                       i * 150
                     }ms`,
@@ -1544,53 +1545,58 @@ function PanelQuestions() {
   }, [inView]);
 
   const questions = [
-    "Kelas menengah menyumbang 81,5% konsumsi rumah tangga Indonesia — tapi tidak ada jaring pengaman untuk mereka. Apakah ini adil?",
+    "Kelas menengah menyumbang 81,5% konsumsi rumah tangga Indonesia, tapi tidak ada jaring pengaman untuk mereka. Apakah ini adil?",
     "Jika tren ini terus berlanjut, apakah Indonesia masih bisa mencapai target negara maju 2045?",
-    "Apa yang bisa dilakukan — oleh pemerintah, oleh kita sendiri — agar tidak jatuh lebih dalam?",
+    "Apa yang bisa dilakukan oleh pemerintah dan diri kita sendiri agar tidak jatuh lebih dalam?",
   ];
+
+  // Identitas warna BPS: Biru, Oren, Hijau
+  const BPS_COLORS = ["#4364df", "#ff8307", "#6bde45"];
 
   return (
     <section
       ref={ref}
       data-panel
-      className="relative w-full min-h-screen flex flex-col items-center justify-center px-6 md:px-16 py-24"
+      className="relative w-full min-h-screen flex flex-col items-center justify-center px-6 md:px-16 py-12 overflow-hidden"
       style={{ background: "hsl(30 35% 88%)" }}
     >
-      <div className="max-w-4xl w-full space-y-16">
+      {/* Container z-10 dengan margin-top negatif agar judul sedikit naik ke atas */}
+      <div className="relative z-10 max-w-3xl w-full space-y-8 md:space-y-12 md:-mt-24">
         <h2 className="font-serif text-4xl md:text-6xl leading-tight text-center">
           Lalu… bagaimana nasib kelas menengah?
         </h2>
 
-        <div className="space-y-12">
+        <div className="space-y-6 md:space-y-8">
           {questions.map((q, i) => (
             <blockquote
               key={i}
-              className={`font-serif text-xl md:text-2xl leading-relaxed pl-6 md:pl-8 border-l-4 transition-all duration-700 ${
-                i === 0
-                  ? "border-primary"
-                  : i === 1
-                  ? "border-secondary ml-0 md:ml-12"
-                  : "border-accent ml-0 md:ml-24"
+              // Menambahkan text-justify pada className untuk meratakan teks di kedua sisi
+              className={`font-serif text-xl md:text-2xl leading-relaxed pl-6 md:pl-8 border-l-[6px] text-justify transition-all duration-700 ${
+                i === 1 ? "ml-0 md:ml-12" : i === 2 ? "ml-0 md:ml-24" : ""
               } ${
                 step > i
                   ? "opacity-100 translate-x-0"
                   : "opacity-0 translate-x-6"
               }`}
+              style={{ borderColor: BPS_COLORS[i] }}
             >
               "{q}"
             </blockquote>
           ))}
         </div>
+      </div>
 
-        <div
-          className={`pt-16 mt-8 border-t border-border text-center transition-opacity duration-700 ${
-            step >= 3 ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground font-bold">
+      {/* Bagian sumber data diposisikan absolut di bawah seperti layout copyright */}
+      <div
+        className={`absolute bottom-8 left-0 w-full px-6 md:px-16 transition-opacity duration-700 ${
+          step >= 3 ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <div className="max-w-3xl mx-auto border-t border-black/10 pt-6 text-center">
+          <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-bold">
             Sumber data
           </p>
-          <p className="text-sm mt-2 text-foreground/80">
+          <p className="text-sm mt-1 text-foreground/70">
             Katadata Indonesia Middle Class Insight (KIMCI) 2026 · BPS · Bappenas
           </p>
         </div>
