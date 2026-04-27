@@ -153,7 +153,7 @@ function useInView<T extends HTMLElement>(threshold = 0.4) {
     const obs = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
-          if (e.isIntersecting) setInView(true);
+          setInView(e.isIntersecting);
         });
       },
       { threshold }
@@ -936,15 +936,15 @@ function PanelAlarm() {
 // ============ PANEL 5: PENGELUARAN ============
 
 function PanelExpenses() {
-  const { ref, inView } = useInView<HTMLDivElement>(0.2);
-  const [hasViewed, setHasViewed] = useState(false);
+  const { ref, inView } = useInView<HTMLDivElement>(0.4);
+  const [chartKey, setChartKey] = useState(0);
 
   useEffect(() => {
-    if (inView && !hasViewed) {
-      const timer = setTimeout(() => setHasViewed(true), 150);
-      return () => clearTimeout(timer);
+    if (inView) {
+      // Setiap kali masuk viewport, ganti key → Recharts remount → animasi ulang
+      setChartKey((k) => k + 1);
     }
-  }, [inView, hasViewed]);
+  }, [inView]);
 
   return (
     <section
@@ -954,11 +954,9 @@ function PanelExpenses() {
       style={{ background: "hsl(15 30% 90%)" }}
     >
       <div className="max-w-6xl w-full grid md:grid-cols-2 gap-16 items-center">
-        
+
         {/* ================= SISI KIRI: TEKS ================= */}
         <div className="space-y-10">
-          
-          {/* Headline: Dibuat lebih dramatis */}
           <div className="space-y-3">
             <h2 className="font-serif text-4xl md:text-6xl leading-[1.1] tracking-tight">
               Gaji habis <br />
@@ -966,7 +964,6 @@ function PanelExpenses() {
             </h2>
           </div>
 
-          {/* Card Utama: Beban Pendapatan */}
           <div className="bg-white/50 backdrop-blur-sm border border-white p-8 rounded-[2rem] shadow-xl shadow-black/5 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-2 h-full bg-destructive" />
             <p className="text-sm md:text-base text-muted-foreground font-medium mb-4">
@@ -980,13 +977,13 @@ function PanelExpenses() {
             </p>
           </div>
 
-          {/* Highlight Section: 636 dari 1000 */}
           <div className="relative pl-8 py-2">
             <div className="absolute left-0 top-0 bottom-0 w-1 bg-black/10 rounded-full" />
             <p className="text-xl md:text-2xl leading-snug text-foreground/80">
               <span className="text-black font-extrabold underline decoration-destructive/30 decoration-4 underline-offset-4">
                 636 dari 1000
-              </span> kelas menengah pernah mengalami defisit dalam setahun terakhir.
+              </span>{" "}
+              kelas menengah pernah mengalami defisit dalam setahun terakhir.
             </p>
             <p className="text-xs text-muted-foreground mt-4 font-bold tracking-widest uppercase">
               (Survey KIC Q4 2025 - Q1 2026)
@@ -994,13 +991,14 @@ function PanelExpenses() {
           </div>
         </div>
 
-        {/* ================= SISI KANAN: PIE CHART (TIDAK DIUBAH) ================= */}
+        {/* ================= SISI KANAN: PIE CHART ================= */}
         <div className="w-full flex flex-col items-center">
           <div className="relative h-[400px] md:h-[450px] w-full max-w-2xl">
-            <ResponsiveContainer width="100%" height="100%">
+            {/* key={chartKey} → paksa Recharts remount tiap masuk viewport */}
+            <ResponsiveContainer key={chartKey} width="100%" height="100%">
               <PieChart margin={{ top: 20, right: 120, bottom: 20, left: 120 }}>
                 <Pie
-                  data={hasViewed ? DATA_PENGELUARAN : []}
+                  data={inView ? DATA_PENGELUARAN : []}
                   cx="50%"
                   cy="50%"
                   innerRadius="40%"
@@ -1017,20 +1015,11 @@ function PanelExpenses() {
                     strokeWidth: 1,
                     opacity: 0.5,
                   }}
-                  label={({
-                    cx,
-                    cy,
-                    midAngle,
-                    outerRadius,
-                    value,
-                    name,
-                    index,
-                  }) => {
+                  label={({ cx, cy, midAngle, outerRadius, value, name, index }) => {
                     const RADIAN = Math.PI / 180;
                     const radius = outerRadius + 15;
                     const x = cx + radius * Math.cos(-midAngle * RADIAN);
                     const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
                     const isLeft = x < cx;
                     const boxWidth = 200;
                     const boxHeight = 60;
@@ -1048,9 +1037,7 @@ function PanelExpenses() {
                         <div
                           className={`w-full h-full flex flex-col justify-center transition-all duration-700 ${
                             isLeft ? "items-end" : "items-start"
-                          } ${
-                            hasViewed ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-                          }`}
+                          } opacity-100 translate-y-0`}
                           style={{ transitionDelay: `${index * 150 + 1000}ms` }}
                         >
                           <div
@@ -1072,7 +1059,7 @@ function PanelExpenses() {
                     );
                   }}
                 >
-                  {(hasViewed ? DATA_PENGELUARAN : []).map((entry, i) => (
+                  {DATA_PENGELUARAN.map((entry, i) => (
                     <Cell key={i} fill={entry.color} />
                   ))}
                 </Pie>
@@ -1321,11 +1308,13 @@ function PanelFourCards({
 function PanelPictogram() {
   const [activated, setActivated] = useState(false);
   const [showSecond, setShowSecond] = useState(false);
+  const [showThird, setShowThird] = useState(false);
 
   useEffect(() => {
     if (activated) {
-      const t = setTimeout(() => setShowSecond(true), 1400);
-      return () => clearTimeout(t);
+      const t1 = setTimeout(() => setShowSecond(true), 1400);
+      const t2 = setTimeout(() => setShowThird(true), 2400);
+      return () => { clearTimeout(t1); clearTimeout(t2); };
     }
   }, [activated]);
 
@@ -1340,9 +1329,6 @@ function PanelPictogram() {
     >
       <div className="max-w-4xl w-full text-center space-y-12">
         <div className="space-y-3">
-          <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground font-bold">
-            Panel 07 — Strategi Bertahan
-          </p>
           <h2 className="font-serif text-3xl md:text-5xl leading-tight">
             Cara mereka bertahan dan menghadapi ketakutan.
           </h2>
@@ -1398,11 +1384,20 @@ function PanelPictogram() {
               showSecond ? "opacity-100" : "opacity-0"
             }`}
           >
-            Dan <span className="text-foreground font-bold">94,8%</span> berencana
+            Dan dari mereka,{" "}
+            <span className="text-foreground font-bold">94,8%</span> berencana
             terus melakukannya 5 tahun ke depan.
           </p>
-          <p className="text-xs tracking-[0.3em] text-muted-foreground/60 pt-6 uppercase font-bold">
-            Reason: To survive
+          <p
+            className={`text-3xl tracking-[0.3em] pt-6 uppercase font-bold transition-opacity duration-1000 ${
+              showThird ? "opacity-100" : "opacity-0"
+            }`}
+            style={{ color: "hsl(var(--primary))" }}
+          >
+            Reason: To Survive
+          </p>
+          <p className="text-xs text-muted-foreground/50 pt-2">
+            Sumber: Survei KIC, n=1000 responden (Q4 2025–Q1 2026)
           </p>
         </div>
       </div>
@@ -1422,84 +1417,142 @@ function PanelBappenas() {
       className="relative w-full min-h-screen flex items-center justify-center px-6 md:px-16 py-24"
       style={{ background: "hsl(50 38% 92%)" }}
     >
-      <div className="max-w-5xl w-full space-y-16 text-center">
-        <div className="space-y-3">
-          <p className="text-xs tracking-[0.3em] uppercase text-primary font-bold">
-            Panel 08 — Mengatasi Ancaman Turun Kelas
-          </p>
-          <h2 className="font-serif text-3xl md:text-5xl leading-tight max-w-3xl mx-auto">
-            Mereka tidak hanya gagal naik. Mereka aktif berjuang agar tidak
-            jatuh lebih dalam.
+      <div className="max-w-5xl w-full space-y-12 text-center">
+
+        {/* Headline */}
+        <div className="w-full">
+          <h2 className="font-serif text-3xl md:text-5xl leading-tight whitespace-nowrap scale-x-[0.95] md:scale-x-100 origin-center w-full text-center block">
+            Kelas menengah tidak hanya berjuang untuk naik.<br />
+            Mereka berusaha keras agar tidak turun.
           </h2>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-end pt-8">
-          <div className="text-left space-y-3 relative">
-            <p className="text-xs tracking-widest uppercase text-muted-foreground font-bold">
-              Bappenas — Target 2045
-            </p>
-            <p className="font-serif text-7xl md:text-8xl text-foreground/40">
-              70%
-            </p>
-            <p className="text-sm max-w-xs">
-              Indonesia butuh 70% populasi jadi kelas menengah untuk menjadi
-              negara maju.
-            </p>
-            {/* 100% bar with 70% filled */}
-            <div className="mt-4 space-y-1.5">
-              <div className="h-7 w-full bg-muted/50 rounded-full overflow-hidden border border-border/60 shadow-inner relative">
-                <div
-                  className="h-full rounded-full transition-all ease-out"
-                  style={{
-                    width: inView ? "70%" : "0%",
-                    background:
-                      "linear-gradient(90deg, hsl(215 25% 35%), hsl(215 20% 50%))",
-                    transitionDuration: "1800ms",
-                  }}
-                />
-                {/* 100% marker line — darker, thicker for clear visibility */}
-                <div className="absolute right-0 top-0 h-full w-[3px] bg-foreground/85 rounded-r-full" />
-              </div>
-              <div className="flex justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
-                <span className="font-bold text-foreground/70">70%</span>
-                <span>100%</span>
-              </div>
+        {/* Bar Section */}
+        <div className="max-w-2xl w-full mx-auto space-y-3">
+          <p className="text-left text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+            Proporsi kelas menengah terhadap total populasi
+          </p>
+
+          {/* Bar */}
+          <div
+            className="relative h-14 w-full rounded-2xl overflow-hidden border border-border/40"
+            style={{ background: "hsl(50 20% 86%)" }}
+          >
+            {/* Target fill (70% — dark purple, low opacity) */}
+            <div
+              className="absolute left-0 top-0 h-full rounded-2xl transition-all ease-out"
+              style={{
+                width: inView ? "70%" : "0%",
+                background: "#3C3489",
+                opacity: 0.18,
+                transitionDuration: "1800ms",
+              }}
+            />
+
+            {/* Actual fill (16.9% — terra cotta) */}
+            <div
+              className="absolute left-0 top-0 h-full rounded-2xl transition-all ease-out"
+              style={{
+                width: inView ? "16.9%" : "0%",
+                background: "#D85A30",
+                transitionDuration: "1400ms",
+                transitionDelay: "200ms",
+              }}
+            />
+
+            {/* Label: 16.9% inside bar */}
+            <div
+              className="absolute top-0 h-full flex items-center transition-all ease-out"
+              style={{
+                left: inView ? "17.5%" : "0%",
+                transitionDuration: "1400ms",
+                transitionDelay: "200ms",
+              }}
+            >
+              <span
+                className="text-sm font-semibold whitespace-nowrap pl-2"
+                style={{ color: "#D85A30" }}
+              >
+                16,9%
+              </span>
+            </div>
+
+            {/* Label: 70% after divider */}
+            <div
+              className="absolute top-0 h-full flex items-center transition-all ease-out"
+              style={{
+                left: inView ? "70.5%" : "0%",
+                transitionDuration: "1800ms",
+              }}
+            >
+              <span
+                className="text-sm font-semibold whitespace-nowrap pl-1"
+                style={{ color: "#3C3489" }}
+              >
+                70%
+              </span>
             </div>
           </div>
 
-          <div className="text-left space-y-3 relative">
-            <p className="text-xs tracking-widest uppercase text-primary font-bold">
-              Realita 2024
-            </p>
-            <p className="font-serif text-7xl md:text-8xl text-primary">
-              16,9%
-            </p>
-            <p className="text-sm max-w-xs">
-              Hanya 16,9% kelas menengah di Indonesia hari ini. Target masih
-              jauh.
-            </p>
-            {/* 100% bar with 16.9% filled */}
-            <div className="mt-4 space-y-1.5">
-              <div className="h-7 w-full bg-muted/50 rounded-full overflow-hidden border border-border/60 shadow-inner relative">
-                <div
-                  className="h-full rounded-full transition-all ease-out"
-                  style={{
-                    width: inView ? "16.9%" : "0%",
-                    background:
-                      "linear-gradient(90deg, hsl(15 60% 50%), hsl(15 55% 60%))",
-                    transitionDuration: "1800ms",
-                  }}
-                />
-                {/* 100% marker line — darker, thicker for clear visibility */}
-                <div className="absolute right-0 top-0 h-full w-[3px] bg-foreground/85 rounded-r-full" />
-              </div>
-              <div className="flex justify-between text-[10px] uppercase tracking-widest text-muted-foreground">
-                <span className="font-bold text-primary">16,9%</span>
-                <span>100%</span>
-              </div>
-            </div>
+          {/* Axis labels */}
+          <div className="relative flex justify-between text-xs text-muted-foreground">
+            <span>0%</span>
+            <span
+              className="absolute font-semibold"
+              style={{
+                left: "70%",
+                transform: "translateX(-50%)",
+                color: "hsl(var(--foreground) / 0.6)",
+              }}
+            >
+              70%
+            </span>
+            <span>100%</span>
           </div>
         </div>
+
+        {/* Cards */}
+        <div className="grid grid-cols-2 gap-4 text-left max-w-2xl mx-auto w-full">
+          <div
+            className="p-5 rounded-2xl border border-border/40 space-y-2"
+            style={{ 
+              background: "hsl(50 38% 96%)",
+              border: "1px solid #D85A30", 
+            }}
+          >
+            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground text-center">
+              Realita 2024
+            </p>
+            <p className="font-serif text-6xl leading-none text-center" style={{ color: "#D85A30" }}>
+              16,9%
+            </p>
+            <p className="text-sm text-muted-foreground leading-snug text-center">
+              Hanya 47,2 juta orang — turun dari 57,3 juta pada 2019
+            </p>
+          </div>
+
+          <div
+            className="p-5 rounded-2xl space-y-2"
+            style={{
+              background: "hsl(50 38% 96%)",
+              border: "1px solid #3C3489",
+            }}
+          >
+            <p
+              className="text-xs font-semibold uppercase tracking-widest text-center"
+              style={{ color: "#3C3489" }}
+            >
+              Target Bappenas 2045
+            </p>
+            <p className="font-serif text-6xl leading-none text-center" style={{ color: "#3C3489" }}>
+              70%
+            </p>
+            <p className="text-sm text-muted-foreground leading-snug text-center">
+              Indonesia butuh 70% populasi jadi kelas menengah untuk menjadi negara maju
+            </p>
+          </div>
+        </div>
+
       </div>
     </section>
   );
