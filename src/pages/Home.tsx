@@ -41,11 +41,6 @@ const DATA_KONSUMSI_KELAS = [
 ];
 
 const DATA_TREND = [
-  { year: "2014", value: 17.6 },
-  { year: "2015", value: 17.3 },
-  { year: "2016", value: 19.8 },
-  { year: "2017", value: 22.0 },
-  { year: "2018", value: 22.5 },
   { year: "2019", value: 21.5 },
   { year: "2020", value: 20.6 },
   { year: "2021", value: 19.8 },
@@ -95,21 +90,21 @@ const CARD_META: Record<
     icon: HomeIcon,
     accent: "hsl(150 38% 42%)",
     bg: "hsl(150 38% 42% / 0.20)",
-    headline: "Mimpi punya rumah sendiri yang makin menjauh.",
+    headline: "Mengapa Anda tidak berencana memiliki hunian dalam 5 tahun kedepan?",
   },
   pendidikan: {
     label: "PENDIDIKAN",
     icon: GraduationCap,
     accent: "hsl(35 75% 45%)",
     bg: "hsl(35 75% 45% / 0.22)",
-    headline: "Ingin anak naik kelas, tapi biaya sekolah terus naik.",
+    headline: "Investasi pendidikan sebagai strategi jangka panjang",
   },
   kesehatan: {
     label: "KESEHATAN",
     icon: HeartPulse,
     accent: "hsl(0 60% 50%)",
     bg: "hsl(0 60% 50% / 0.18)",
-    headline: "Bom waktu yang tidak terlihat di buku tabungan.",
+    headline: "'Bom waktu' yang tidak terlihat di buku tabungan.",
   },
 };
 
@@ -127,24 +122,24 @@ type Annotation = {
 
 const CARD_ANNOTATIONS: Record<CardKey, Annotation[]> = {
   keuangan: [
-    { x: 75, y: 22, lineStart: { x: 75, y: 50 }, value: "63,6%", label: "Pernah pengeluaran > pemasukan" },
-    { x: 22, y: 75, lineStart: { x: 50, y: 75 }, value: "56,9%", label: "Konsumsi harian + cicilan langsung lenyap" },
-    { x: 78, y: 78, lineStart: { x: 75, y: 75 }, value: "21,8%", label: "Sisa untuk tabungan & investasi" },
+    { x: 75, y: 22, lineStart: { x: 75, y: 50 }, value: "63,6%", label: "Pernah 'besar pasak daripada tiang'" },
+    { x: 22, y: 75, lineStart: { x: 50, y: 75 }, value: "56,9%", label: "Pendapatan untuk konsumsi harian + cicilan langsung lenyap" },
+    { x: 78, y: 78, lineStart: { x: 75, y: 75 }, value: "21,8%", label: "Sisa pendapatan untuk tabungan & investasi" },
   ],
   hunian: [
-    { x: 22, y: 22, lineStart: { x: 125, y: 50 }, value: "35%", label: "Bilang harga rumah terlalu mahal" },
+    { x: 22, y: 22, lineStart: { x: 125, y: 50 }, value: "35%", label: "Harga rumah terlalu mahal" },
     { x: 22, y: 78, lineStart: { x: 125, y: 75 }, value: "29%", label: "Akses pembiayaan KPR terbatas" },
-    { x: 78, y: 78, lineStart: { x: 150, y: 75 }, value: "28%", label: "Gaji tidak ikuti kenaikan harga" },
+    { x: 78, y: 78, lineStart: { x: 150, y: 75 }, value: "28%", label: "Gaji tidak sebanding dengan kenaikan harga rumah" },
   ],
   pendidikan: [
-    { x: 22, y: 22, lineStart: { x: 50, y: 125 }, value: "99%", label: "Berharap anak sekolah lebih tinggi" },
-    { x: 78, y: 22, lineStart: { x: 75, y: 125 }, value: "Top 3", label: "Prioritas pengeluaran rumah tangga" },
-    { x: 78, y: 78, lineStart: { x: 75, y: 150 }, value: "+22,2%", label: "Preferensi sekolah swasta naik vs 2025" },
+    { x: 22, y: 22, lineStart: { x: 50, y: 125 }, value: "99%", label: "Berharap anak bisa sekolah lebih tinggi" },
+    { x: 78, y: 22, lineStart: { x: 75, y: 125 }, value: "6,04", label: "Rata-rata indeks kepuasan pendidikan 2026" },
+    { x: 78, y: 78, lineStart: { x: 75, y: 150 }, value: "+22,2%", label: "Kepercayaan terhadap sekolah swasta naik vs 2025" },
   ],
   kesehatan: [
-    { x: 22, y: 22, lineStart: { x: 125, y: 125 }, value: "Bom waktu", label: "Beban kesehatan jangka panjang" },
-    { x: 78, y: 22, lineStart: { x: 150, y: 125 }, value: "5,6/10", label: "Skor kepuasan layanan kesehatan, terendah" },
-    { x: 22, y: 78, lineStart: { x: 125, y: 150 }, value: "72%", label: "Khawatir biaya kesehatan di hari tua" },
+    { x: 78, y: 22, lineStart: { x: 150, y: 125 }, value: "5,60", label: "Kepuasan terhadap biaya kesehatan saat ini di Indonesia" },
+    { x: 22, y: 22, lineStart: { x: 125, y: 125 }, value: "-21,4%", label: "Penurunan kepercayaan pada RS Pemerintah" },
+    { x: 22, y: 78, lineStart: { x: 125, y: 150 }, value: "62,3%", label: "Khawatir dengan penurunan kesehatan masa pensiun" },
   ],
 };
 
@@ -731,26 +726,23 @@ function PanelShrinking() {
       className="relative w-full min-h-screen flex items-center justify-center px-6 md:px-16 py-24"
       style={{ background: "hsl(20 32% 89%)" }}
     >
-      {/* 1. Ukuran container diperkecil (max-w-4xl) & jarak antar elemen dirapatkan (space-y-6) */}
-      <div className="max-w-4xl w-full space-y-6">
-        <div className="space-y-2 text-center">
+      <div className="max-w-5xl w-full space-y-10">
+        <div className="space-y-3 text-center">
           <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground font-bold">
             Panel 03 — Penyusutan
           </p>
-          {/* 2. Ukuran font judul diperkecil */}
-          <h2 className="font-serif text-2xl md:text-4xl leading-tight text-foreground">
-            Tapi… jumlah tulang punggung terus menyusut.
+          <h2 className="font-serif text-3xl md:text-5xl leading-tight">
+            Tapi… jumlah kelas menengah terus menyusut.
           </h2>
         </div>
 
-        {/* 3. Tinggi chart dipangkas (h-[320px]) */}
         <div
-          className={`h-[320px] w-full bg-card/60 p-4 md:p-6 rounded-2xl border border-card-border transition-opacity duration-1000 ${
+          className={`h-[420px] w-full bg-card/60 p-6 rounded-2xl border border-card-border transition-opacity duration-1000 ${
             inView ? "opacity-100" : "opacity-0"
           }`}
         >
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={DATA_TREND} margin={{ top: 20, right: 20, left: -20, bottom: 0 }}>
+            <LineChart data={DATA_TREND} margin={{ top: 30, right: 30, left: 0, bottom: 10 }}>
               <CartesianGrid
                 strokeDasharray="3 6"
                 stroke="hsl(var(--border))"
@@ -761,11 +753,10 @@ function PanelShrinking() {
                 stroke="hsl(var(--muted-foreground))"
                 fontSize={11}
                 tickLine={false}
-                tickMargin={10}
               />
               <YAxis
                 domain={[15, 25]} // Memaksa grafik mulai dari 0 hingga 25
-                ticks={[15, 20, 25]} // Angka sumbu Y statis dan konsisten kelipatan 5
+                ticks={[15, 17, 19, 21, 23, 25]} // Angka sumbu Y statis dan konsisten kelipatan 5
                 stroke="hsl(var(--muted-foreground))"
                 fontSize={11}
                 tickFormatter={(val) => `${val}%`}
@@ -795,18 +786,14 @@ function PanelShrinking() {
           </ResponsiveContainer>
         </div>
 
-        {/* 4. Highlight Kesimpulan Data */}
-        <div className="flex justify-center pt-2">
-          <div className="bg-destructive/10 border border-destructive/20 px-6 py-4 rounded-xl text-center space-y-1 shadow-sm">
-            <p className="text-sm md:text-base font-bold text-destructive">
-              2019: 57,3 juta orang &nbsp;→&nbsp; 2024: 47,2 juta orang
-            </p>
-            <p className="font-serif text-xl md:text-2xl text-foreground">
-              <span className="text-destructive font-semibold">10 juta orang</span> turun kelas dalam 5 tahun.
-            </p>
-          </div>
+        <div className="text-center space-y-2">
+          <p className="text-lg md:text-xl font-bold text-destructive">
+            2019: 57,3 juta orang &nbsp;→&nbsp; 2024: 47,2 juta orang
+          </p>
+          <p className="font-serif text-2xl md:text-3xl">
+            10 juta orang turun kelas dalam 5 tahun.
+          </p>
         </div>
-        
       </div>
     </section>
   );
@@ -853,8 +840,13 @@ function PanelAlarm() {
 
             <div className="relative z-10 flex flex-col items-center">
               <svg width="32" height="32" viewBox="0 0 40 40" fill="none" className="mb-2 opacity-80">
-                <path d="M20 6 v18 m-7-7 l7 7 7-7" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-                <line x1="8" y1="32" x2="32" y2="32" stroke="white" strokeWidth="2.2" strokeLinecap="round"/>
+                <path d="M12 18 V8 C12 6.5 13 6 14 6 H16 C17 6 18 6.5 18 8 V18" stroke="white" strokeWidth="2.2" strokeLinejoin="round"/>
+                <path d="M14 6 V3 H16 V6" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M22 18 V10 C22 7.5 23.5 5 26 5 C28.5 5 30 7.5 30 10 V18" stroke="white" strokeWidth="2.2" strokeLinejoin="round"/>
+                <path d="M25 5 L24 2 M27 5 L28 2" stroke="white" strokeWidth="2.2" strokeLinecap="round"/>
+                <path d="M5 18 L7.5 33.5 C7.8 35 9 36 10.5 36 H29.5 C31 36 32.2 35 32.5 33.5 L35 18 Z" stroke="white" strokeWidth="2.2" strokeLinejoin="round"/>
+                <path d="M3 18 H37" stroke="white" strokeWidth="2.2" strokeLinecap="round"/>
+                <path d="M16 27 H24" stroke="white" strokeWidth="2.2" strokeLinecap="round"/>
               </svg>
               <h3 className="font-bold tracking-widest text-xs text-white">
                 KELAS BAWAH
@@ -875,7 +867,7 @@ function PanelAlarm() {
             <div
               className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
               /* UBAH URL INI DENGAN FOTO KELAS MENENGAH DI FOLDER LOKALMU */
-              style={{ backgroundImage: "url('/images/panel1-wallet')" }} 
+              style={{ backgroundImage: "url('/images/panel1-wallet.png')" }} 
             />
             {/* Overlay Gelap Kemerahan + Efek Blur biar tanda tanya menonjol */}
             <div className="absolute inset-0 bg-orange-950/60 backdrop-blur-[2px]" />
@@ -900,16 +892,20 @@ function PanelAlarm() {
             <div
               className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
               /* UBAH URL INI DENGAN FOTO ASET/MEWAH DI FOLDER LOKALMU */
-              style={{ backgroundImage: "url('/images/syahroni.webp')" }} 
+              style={{ backgroundImage: "url('/images/purbaya.webp')" }} 
             />
             {/* Overlay Gelap Keabu-abuan */}
             <div className="absolute inset-0 bg-slate-950/65" />
 
             <div className="relative z-10 flex flex-col items-center">
               <svg width="32" height="32" viewBox="0 0 40 40" fill="none" className="mb-2 opacity-80">
-                <rect x="6" y="22" width="28" height="10" rx="1.5" stroke="white" strokeWidth="2" fill="none"/>
-                <rect x="11" y="13" width="18" height="9" rx="1.5" stroke="white" strokeWidth="2" fill="none"/>
-                <rect x="15" y="5" width="10" height="8" rx="1.5" stroke="white" strokeWidth="2" fill="none"/>
+                {/* Garis Tanah */}
+                <path d="M4 34H36" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                <path d="M18 34V10C18 8.895 18.895 8 20 8H30C31.105 8 32 8.895 32 10V34" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M22 14H28 M22 20H28 M22 26H28" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                <path d="M6 22L12 17L18 22" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M8 21V34 M16 21V34" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M10 34V28C10 27.448 10.448 27 11 27H13C13.552 27 14 27.448 14 28V34" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
               <h3 className="font-bold tracking-widest text-xs text-white">
                 KELAS ATAS
@@ -940,7 +936,15 @@ function PanelAlarm() {
 // ============ PANEL 5: PENGELUARAN ============
 
 function PanelExpenses() {
-  const { ref, inView } = useInView<HTMLDivElement>(0.3);
+  const { ref, inView } = useInView<HTMLDivElement>(0.2);
+  const [hasViewed, setHasViewed] = useState(false);
+
+  useEffect(() => {
+    if (inView && !hasViewed) {
+      const timer = setTimeout(() => setHasViewed(true), 150);
+      return () => clearTimeout(timer);
+    }
+  }, [inView, hasViewed]);
 
   return (
     <section
@@ -950,71 +954,130 @@ function PanelExpenses() {
       style={{ background: "hsl(15 30% 90%)" }}
     >
       <div className="max-w-6xl w-full grid md:grid-cols-2 gap-16 items-center">
-        <div className="space-y-8">
+        
+        {/* ================= SISI KIRI: TEKS ================= */}
+        <div className="space-y-10">
+          
+          {/* Headline: Dibuat lebih dramatis */}
           <div className="space-y-3">
-            <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground font-bold">
-              Panel 05 — Pengeluaran
-            </p>
-            <h2 className="font-serif text-3xl md:text-5xl leading-tight">
-              Gaji habis sebelum bulan habis.
+            <h2 className="font-serif text-4xl md:text-6xl leading-[1.1] tracking-tight">
+              Gaji habis <br />
+              <span className="text-muted-foreground italic font-light">sebelum</span> bulan habis.
             </h2>
           </div>
 
-          <div className="bg-destructive/10 border border-destructive/30 p-6 rounded-2xl">
-            <p className="text-base leading-relaxed">
+          {/* Card Utama: Beban Pendapatan */}
+          <div className="bg-white/50 backdrop-blur-sm border border-white p-8 rounded-[2rem] shadow-xl shadow-black/5 relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-2 h-full bg-destructive" />
+            <p className="text-sm md:text-base text-muted-foreground font-medium mb-4">
               Konsumsi harian (40,5%) + Cicilan (16,4%) =
-              <span className="block font-serif text-3xl md:text-4xl text-destructive mt-2">
-                56,9% pendapatan langsung lenyap.
-              </span>
+            </p>
+            <h3 className="font-serif text-5xl md:text-6xl text-destructive font-bold tracking-tighter leading-none">
+              56,9%
+            </h3>
+            <p className="text-xl md:text-2xl font-medium mt-2 text-foreground/80">
+              pendapatan langsung lenyap.
             </p>
           </div>
 
-          <p className="text-lg md:text-xl border-l-4 border-primary pl-5 py-1">
-            <span className="font-bold">63,6%</span> kelas menengah pernah
-            mengalami pengeluaran lebih besar dari pemasukan dalam 1 tahun
-            terakhir.
-          </p>
+          {/* Highlight Section: 636 dari 1000 */}
+          <div className="relative pl-8 py-2">
+            <div className="absolute left-0 top-0 bottom-0 w-1 bg-black/10 rounded-full" />
+            <p className="text-xl md:text-2xl leading-snug text-foreground/80">
+              <span className="text-black font-extrabold underline decoration-destructive/30 decoration-4 underline-offset-4">
+                636 dari 1000
+              </span> kelas menengah pernah mengalami defisit dalam setahun terakhir.
+            </p>
+            <p className="text-xs text-muted-foreground mt-4 font-bold tracking-widest uppercase">
+              (Survey KIC Q4 2025 - Q1 2026)
+            </p>
+          </div>
         </div>
 
+        {/* ================= SISI KANAN: PIE CHART (TIDAK DIUBAH) ================= */}
         <div className="w-full flex flex-col items-center">
-          <div className="relative h-[360px] w-full max-w-sm">
+          <div className="relative h-[400px] md:h-[450px] w-full max-w-2xl">
             <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
+              <PieChart margin={{ top: 20, right: 120, bottom: 20, left: 120 }}>
                 <Pie
-                  data={DATA_PENGELUARAN}
+                  data={hasViewed ? DATA_PENGELUARAN : []}
                   cx="50%"
                   cy="50%"
-                  innerRadius={92}
-                  outerRadius={150}
+                  innerRadius="40%"
+                  outerRadius="80%"
                   paddingAngle={2}
                   dataKey="value"
-                  isAnimationActive={inView}
-                  animationDuration={1400}
+                  startAngle={-300}
+                  endAngle={60}
+                  isAnimationActive={true}
+                  animationDuration={2000}
+                  animationBegin={0}
+                  labelLine={{
+                    stroke: "hsl(var(--muted-foreground))",
+                    strokeWidth: 1,
+                    opacity: 0.5,
+                  }}
+                  label={({
+                    cx,
+                    cy,
+                    midAngle,
+                    outerRadius,
+                    value,
+                    name,
+                    index,
+                  }) => {
+                    const RADIAN = Math.PI / 180;
+                    const radius = outerRadius + 15;
+                    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+                    const isLeft = x < cx;
+                    const boxWidth = 200;
+                    const boxHeight = 60;
+                    const foX = isLeft ? x - boxWidth : x;
+                    const foY = y - boxHeight / 2;
+
+                    return (
+                      <foreignObject
+                        x={foX}
+                        y={foY}
+                        width={boxWidth}
+                        height={boxHeight}
+                        className="overflow-visible"
+                      >
+                        <div
+                          className={`w-full h-full flex flex-col justify-center transition-all duration-700 ${
+                            isLeft ? "items-end" : "items-start"
+                          } ${
+                            hasViewed ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                          }`}
+                          style={{ transitionDelay: `${index * 150 + 1000}ms` }}
+                        >
+                          <div
+                            className="w-max flex flex-col px-3 py-1.5 rounded-lg shadow-sm border bg-white/95 backdrop-blur-sm"
+                            style={{ borderColor: DATA_PENGELUARAN[index].color }}
+                          >
+                            <span className="text-[10px] md:text-[11px] leading-tight text-muted-foreground font-medium">
+                              {name}
+                            </span>
+                            <span
+                              className="text-[11px] md:text-xs font-bold leading-tight mt-0.5"
+                              style={{ color: DATA_PENGELUARAN[index].color }}
+                            >
+                              {value.toString().replace(".", ",")}%
+                            </span>
+                          </div>
+                        </div>
+                      </foreignObject>
+                    );
+                  }}
                 >
-                  {DATA_PENGELUARAN.map((entry, i) => (
+                  {(hasViewed ? DATA_PENGELUARAN : []).map((entry, i) => (
                     <Cell key={i} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(v) => `${v}%`} />
               </PieChart>
             </ResponsiveContainer>
-          </div>
-          {/* Legend — flex-wrap centered so 5 items align cleanly under the donut */}
-          <div className="mt-4 flex flex-wrap justify-center gap-x-5 gap-y-2 text-[11px] max-w-md">
-            {DATA_PENGELUARAN.map((d, i) => (
-              <div key={i} className="flex items-center gap-2">
-                <span
-                  className="w-2.5 h-2.5 rounded-sm shrink-0"
-                  style={{ background: d.color }}
-                />
-                <span className="text-muted-foreground">
-                  {d.name}{" "}
-                  <span className="text-foreground font-bold">
-                    {d.value.toString().replace(".", ",")}%
-                  </span>
-                </span>
-              </div>
-            ))}
           </div>
         </div>
       </div>
@@ -1063,25 +1126,35 @@ function PanelFourCards({
     <section
       ref={sectionRef}
       data-panel
-      className="relative w-full min-h-screen flex items-center justify-center px-6 md:px-16 py-24 overflow-hidden"
+      className="relative w-full min-h-screen flex items-center justify-center px-6 md:px-16 py-12 overflow-hidden"
       style={{ background: "hsl(150 22% 86%)" }}
     >
-      <div className="max-w-3xl w-full space-y-10">
-        <div className="text-center space-y-3">
-          <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground font-bold">
-            Panel 06 — Empat Keresahan
-          </p>
-          <h2 className="font-serif text-3xl md:text-5xl leading-tight max-w-2xl mx-auto">
-            Mereka tidak takut satu hal. Mereka takut semua hal sekaligus.
-          </h2>
-          <p className="text-sm text-muted-foreground italic flex items-center justify-center gap-2">
-            <MousePointer2 className="w-3.5 h-3.5" />
-            Arahkan kursor ke setiap kartu untuk membuka data
-          </p>
+      {/* Container diubah menjadi grid 5 kolom */}
+      <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-12 items-center">
+        
+        {/* ================= SISI KIRI: TEKS (Mengambil 2 Kolom) ================= */}
+        <div className="md:col-span-2 space-y-8 text-left">
+          <div className="space-y-4">
+            <h2 className="font-serif text-3xl md:text-5xl leading-tight text-foreground">
+              Empat keresahan utama yang terus menghantui kelas menengah.
+            </h2>
+            
+            <p className="text-sm text-muted-foreground italic flex items-center gap-2 mt-4">
+              <MousePointer2 className="w-3.5 h-3.5" />
+              Arahkan kursor ke setiap kartu untuk membuka data
+            </p>
+          </div>
+
+          <div className="flex items-start gap-3 text-sm text-muted-foreground pt-2">
+            <ChevronDown className="w-5 h-5 text-primary animate-bounce shrink-0 mt-0.5" />
+            <span className="text-primary font-bold">
+              Hover setiap kartu atau lanjut scroll untuk melihat konten selanjutnya
+            </span>
+          </div>
         </div>
 
-        {/* Card grid container — slightly smaller than before */}
-        <div className="relative max-w-md md:max-w-lg mx-auto aspect-square">
+        {/* ================= SISI KANAN: KARTU (Mengambil 3 Kolom) ================= */}
+        <div className="md:col-span-3 relative w-full max-w-lg mx-auto aspect-square">
           {/* SVG annotation lines */}
           <svg
             className="absolute inset-0 w-full h-full pointer-events-none z-30"
@@ -1168,18 +1241,11 @@ function PanelFourCards({
                         <Icon className="w-7 h-7" />
                       </div>
                       <h3
-                        className="font-bold tracking-widest text-xs md:text-sm"
+                        className="font-bold tracking-widest text-xs md:text-sm text-center"
                         style={{ color: meta.accent }}
                       >
                         {meta.label}
                       </h3>
-                      {/* {visited.has(key) ? (
-                        <span
-                          className="absolute top-2 right-2 text-[10px] uppercase tracking-widest font-bold"
-                          style={{ color: meta.accent }}
-                        >
-                        </span>
-                      ) : null} */}
                     </div>
                     {/* BACK */}
                     <div
@@ -1204,7 +1270,7 @@ function PanelFourCards({
             })}
           </div>
 
-          {/* Text annotations overlay (positioned in % over the grid) — larger to cover blurred cards */}
+          {/* Text annotations overlay */}
           {CARD_ORDER.map((key) =>
             CARD_ANNOTATIONS[key].map((a, i) => {
               const isActive = active === key;
@@ -1244,14 +1310,6 @@ function PanelFourCards({
               );
             })
           )}
-        </div>
-
-        {/* Hint indicator — no lock, scroll bebas */}
-        <div className="flex items-center justify-center gap-3 text-sm text-muted-foreground pt-4">
-          <ChevronDown className="w-4 h-4 text-primary animate-bounce" />
-          <span className="text-primary font-bold">
-            Hover setiap kartu atau lanjut scroll untuk melihat konten selanjutnya
-          </span>
         </div>
       </div>
     </section>
