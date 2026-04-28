@@ -419,7 +419,7 @@ function PanelDefinitionZoom() {
             scale: 1.8, 
             x: "22%",
             y: "0%", 
-            rotation: 90,
+            rotation: 80,
             duration: 1.4,
             ease: "power2.inOut",
           },
