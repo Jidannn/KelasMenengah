@@ -382,57 +382,83 @@ function PanelWelcome() {
 
 function PanelDefinitionZoom() {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const tlRef = useRef<gsap.core.Timeline | null>(null);
 
-  useGSAP(
-    () => {
+  useEffect(() => {
+    if (!sectionRef.current) return;
+
+    const timer = setTimeout(() => {
       if (!sectionRef.current) return;
 
-      const tl = gsap.timeline({
+      // Scope ke pdb-pie-wrap saja, bukan seluruh section
+      const pieWrap = sectionRef.current.querySelector(".pdb-pie-wrap");
+      if (!pieWrap) return;
+
+      const sectors = pieWrap.querySelectorAll(".recharts-pie-sector");
+      const labels = pieWrap.querySelectorAll("foreignObject");
+
+      const otherSectors = Array.from(sectors).slice(1);
+      const otherLabels = Array.from(labels);
+
+      gsap.set(otherSectors, { opacity: 1 });
+      gsap.set(otherLabels, { opacity: 1 });
+
+      if (tlRef.current) {
+        tlRef.current.kill();
+        ScrollTrigger.getAll()
+          .filter((st) => st.vars.id === "panel-def-zoom")
+          .forEach((st) => st.kill());
+      }
+
+      tlRef.current = gsap.timeline({
         scrollTrigger: {
+          id: "panel-def-zoom",
           trigger: sectionRef.current,
           start: "top top",
           end: "+=3000",
           pin: true,
           scrub: 0.6,
+          invalidateOnRefresh: true,
+          // ✅ onRefresh: reset state saat browser refresh/resize
+          onRefresh: () => {
+            const pw = sectionRef.current?.querySelector(".pdb-pie-wrap");
+            if (!pw) return;
+            const s = pw.querySelectorAll(".recharts-pie-sector");
+            const l = pw.querySelectorAll("foreignObject");
+            gsap.set(Array.from(s).slice(1), { opacity: 1 });
+            gsap.set(l, { opacity: 1 });
+          },
         },
       });
 
-      tl.to(".def-text", { opacity: 0, x: -120, duration: 1, ease: "power2.in" }, 0)
-      
-        // 1. Hilangkan Label HTML (foreignObject)
-        .to(".pdb-pie-wrap foreignObject", { 
-          opacity: 0, 
-          duration: 0.3,
-          ease: "power2.out"
+      tlRef.current
+        .to(".def-text", { opacity: 0, x: -120, duration: 1, ease: "power2.in" }, 0)
+        .to(otherLabels, { opacity: 0, duration: 0.3, ease: "power2.out" }, 0)
+        .to(otherSectors, { opacity: 0, duration: 0.4, ease: "power2.out" }, 0)
+        .to(".pdb-pie-wrap", {
+          scale: 1.8,
+          x: "22%",
+          y: "0%",
+          rotation: 100,
+          duration: 1.4,
+          ease: "power2.inOut",
         }, 0)
-
-        .to(".pdb-pie-wrap .recharts-pie-sector:nth-child(n+2)", { 
-          opacity: 0, 
-          duration: 0.4,
-          ease: "power2.out"
-        }, 0)
-
-        // 3. Zoom chart-nya
-        .to(
-          ".pdb-pie-wrap",
-          {
-            scale: 1.8, 
-            x: "22%",
-            y: "0%", 
-            rotation: 100,
-            duration: 1.4,
-            ease: "power2.inOut",
-          },
-          0
-        )
-
         .to(".c-callout", { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, ">-0.3")
         .to(".green-page", { scale: 1, duration: 1.2, ease: "power2.inOut" }, ">+0.1")
         .to(".green-content", { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, ">-0.5")
         .to({}, { duration: 1.2 });
-    },
-    { scope: sectionRef }
-  );
+
+      ScrollTrigger.refresh();
+    }, 300);
+
+    return () => {
+      clearTimeout(timer);
+      if (tlRef.current) tlRef.current.kill();
+      ScrollTrigger.getAll()
+        .filter((st) => st.vars.id === "panel-def-zoom")
+        .forEach((st) => st.kill());
+    };
+  }, []);
 
   // Reusable label renderer modeling Panel 5
   const renderAnnotatedLabel = (data: any[]) => (props: any) => {
