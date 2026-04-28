@@ -570,15 +570,15 @@ function PanelDefinitionZoom() {
       `}</style>
       <div className="absolute inset-0 grid md:grid-cols-2 gap-12 items-center px-6 md:px-16 py-16">
         {/* LEFT: Definition */}
-        <div className="def-text space-y-6 max-w-lg">
-          <h2 className="font-serif text-4xl md:text-5xl leading-tight">
+        <div className="def-text space-y-6 md:space-y-8 max-w-xl lg:max-w-2xl">
+          <h2 className="font-serif text-4xl md:text-6xl lg:text-7xl leading-tight">
             Kelas Menengah Indonesia
           </h2>
-          <div className="bg-card border border-card-border rounded-xl p-6 space-y-3 shadow-sm">
-            <p className="text-sm leading-relaxed text-foreground/90">
+          <div className="bg-card border border-card-border rounded-xl p-6 md:p-8 space-y-3 shadow-sm">
+            <p className="text-sm md:text-base lg:text-lg leading-relaxed text-foreground/90">
               Kelompok masyarakat dengan pengeluaran{" "}
-              <span className="font-bold">3,5 hingga 17 kali Garis Kemiskinan</span>{" "}. 
-              Setara dengan pengeluaran kira-kira{" "}
+              <span className="font-bold">3,5 hingga 17 kali Garis Kemiskinan</span>{" "}
+              . Setara dengan pengeluaran kira-kira{" "}
               <span className="font-bold">Rp2 juta – Rp10 juta</span> per kapita
               per bulan (BPS, 2024).
             </p>
@@ -1751,7 +1751,7 @@ export default function Home() {
       ScrollTrigger.create({
         trigger: containerRef.current,
         start: "top top",
-        end: "bottom bottom",
+        end: "max",
         onUpdate: (self) => setProgress(self.progress),
       });
     },
