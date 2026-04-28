@@ -419,7 +419,7 @@ function PanelDefinitionZoom() {
             scale: 1.8, 
             x: "22%",
             y: "0%", 
-            rotation: 80,
+            rotation: 90,
             duration: 1.4,
             ease: "power2.inOut",
           },
@@ -536,6 +536,12 @@ function PanelDefinitionZoom() {
       className="relative w-full h-screen overflow-hidden"
       style={{ background: "hsl(35 38% 91%)" }}
     >
+      <style>{`
+        .pdb-pie-wrap foreignObject,
+        .pdb-pie-wrap .recharts-pie-sector:nth-child(n+2) {
+          opacity: var(--chart-fade, 1);
+        }
+      `}</style>
       <div className="absolute inset-0 grid md:grid-cols-2 gap-12 items-center px-6 md:px-16 py-16">
         {/* LEFT: Definition */}
         <div className="def-text space-y-6 max-w-lg">
