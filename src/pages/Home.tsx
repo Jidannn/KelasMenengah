@@ -419,7 +419,7 @@ function PanelDefinitionZoom() {
             scale: 1.8, 
             x: "22%",
             y: "0%", 
-            rotation: 90,
+            rotation: 100,
             duration: 1.4,
             ease: "power2.inOut",
           },
@@ -545,19 +545,16 @@ function PanelDefinitionZoom() {
       <div className="absolute inset-0 grid md:grid-cols-2 gap-12 items-center px-6 md:px-16 py-16">
         {/* LEFT: Definition */}
         <div className="def-text space-y-6 max-w-lg">
-          {/* <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground font-bold">
-            Panel 02 — Definisi
-          </p> */}
           <h2 className="font-serif text-4xl md:text-5xl leading-tight">
             Kelas Menengah Indonesia
           </h2>
           <div className="bg-card border border-card-border rounded-xl p-6 space-y-3 shadow-sm">
             <p className="text-sm leading-relaxed text-foreground/90">
               Kelompok masyarakat dengan pengeluaran{" "}
-              <span className="font-bold">3,5 hingga 17 kali Garis Kemiskinan</span>{" "}
-              (BPS, 2024). Setara dengan pengeluaran kira-kira{" "}
+              <span className="font-bold">3,5 hingga 17 kali Garis Kemiskinan</span>{" "}. 
+              Setara dengan pengeluaran kira-kira{" "}
               <span className="font-bold">Rp2 juta – Rp10 juta</span> per kapita
-              per bulan.
+              per bulan (BPS, 2024).
             </p>
           </div>
         </div>
@@ -932,7 +929,14 @@ function PanelExpenses() {
       <div className="max-w-6xl w-full grid md:grid-cols-2 gap-16 items-center">
         
         {/* SISI KIRI: TEKS (TIDAK BERUBAH) */}
-        <div className="space-y-10">
+        <div
+          className="space-y-10 transition-all duration-1000"
+          style={{
+            opacity: hasViewed ? 1 : 0,
+            transform: hasViewed ? "translateX(0)" : "translateX(-40px)",
+            transitionDelay: "100ms",
+          }}
+        >
           <div className="space-y-3">
             <h2 className="font-serif text-4xl md:text-6xl leading-[1.1] tracking-tight">
               Gaji habis <br />
@@ -968,7 +972,14 @@ function PanelExpenses() {
         </div>
 
         {/* SISI KANAN: PIE CHART */}
-        <div className="w-full flex flex-col items-center">
+        <div
+          className="w-full flex flex-col items-center transition-all duration-1000"
+          style={{
+            opacity: hasViewed ? 1 : 0,
+            transform: hasViewed ? "translateX(0)" : "translateX(40px)",
+            transitionDelay: "300ms",
+          }}
+        >
           <div className="relative h-[400px] md:h-[450px] w-full max-w-2xl">
             {/* 1. Pakai key dinamis yang berubah dari 0 ke 1 cuma SEKALI */}
             <ResponsiveContainer width="100%" height="100%">
@@ -983,9 +994,10 @@ function PanelExpenses() {
                     dataKey="value"
                     startAngle={-300}
                     endAngle={60}
-                    isAnimationActive={hasViewed}
-                    animationDuration={1500}
-                    animationBegin={200}
+                    key={hasViewed ? "active" : "idle"}
+                    isAnimationActive={true}
+                    animationDuration={1200}
+                    animationBegin={400}
                     labelLine={{
                       stroke: "hsl(var(--muted-foreground))",
                       strokeWidth: 1,
