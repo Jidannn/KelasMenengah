@@ -460,7 +460,7 @@ function PanelDefinitionZoom() {
     };
   }, []);
 
-  // Reusable label renderer modeling Panel 5
+  // Reusable label renderer modeling 
   const renderAnnotatedLabel = (data: any[]) => (props: any) => {
     const { cx, cy, midAngle, outerRadius, value, name, index } = props;
     const RADIAN = Math.PI / 180;
